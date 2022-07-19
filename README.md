@@ -2,6 +2,14 @@
 
 Repository of the CorreAid project `paris-bikes` for the City of Paris.
 
+TODO project description
+
+TODO project goals
+
+TODO add links to mural, correlaid, etc.
+
+TODO stakeholder list
+
 ## Definition of Done
 
 How do we know that we're really done with a task and have not forgotten anything important? In this project, we use the following Definition of Done:

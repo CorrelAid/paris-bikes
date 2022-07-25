@@ -6,9 +6,15 @@ TODO project description
 
 TODO project goals
 
-TODO add links to mural, correlaid, etc.
-
 TODO stakeholder list
+
+## Useful links
+
+- [Google Drive](https://drive.google.com/drive/folders/1mmsON23Bz-7xB3Y3qGHC0kqSKG6aXUVr)
+- [Slack channel](https://correlaid.slack.com/archives/C03NAN24GDN)
+- [Planning Mural](https://app.mural.co/t/correlaid9916/m/correlaid9916/1657610032235/e86d4422b5be6421cd132e9c47a3eb82f0d191f3)
+- [Team Manifesto Mural](https://app.mural.co/t/correlaid9916/m/correlaid9916/1657265397906/558401920c32987ce75a2853aaea0e06aa6e94e2)
+- [CorrelAid docs](https://docs.correlaid.org/)
 
 ## Definition of Done
 

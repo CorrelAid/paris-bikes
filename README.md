@@ -16,6 +16,52 @@ TODO stakeholder list
 - [Team Manifesto Mural](https://app.mural.co/t/correlaid9916/m/correlaid9916/1657265397906/558401920c32987ce75a2853aaea0e06aa6e94e2)
 - [CorrelAid docs](https://docs.correlaid.org/)
 
+## Project setup
+
+### Data management
+
+We use [DVC](https://dvc.org/) for data management and version control.
+DVC is setup to store our data repository on our project's Google Drive (folder name `dvcstore`).
+
+DVC is easy to use and follows a syntax similar to git.
+
+
+**To install DVC:** 
+
+```bash
+pip install dvc[gdrive]
+``` 
+
+(check [here](https://dvc.org/doc/install) for other methods)
+
+**To get DVC-managed files from the remote repository:**
+
+```bash
+dvc pull
+```
+
+**To track a new data file with DVC:**
+
+```bash
+dvc add data/new_file.csv
+git add data/new_file.csv.dvc data/.gitignore
+git commit -m "Add new data file"
+```
+
+**To push new DVC-managed files to the remote repository:**
+
+```bash
+dvc push
+```
+
+**To sync DVC-managed files with the current git branch/commit:**
+
+```bash
+dvc checkout
+```
+
+A quick starting guide can be found [here](https://dvc.org/doc/start/data-management).
+
 ## Definition of Done
 
 How do we know that we're really done with a task and have not forgotten anything important? In this project, we use the following Definition of Done:

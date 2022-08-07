@@ -68,6 +68,7 @@ How do we know that we're really done with a task and have not forgotten anythin
 
 - **Functionality**: the code runs / has no defects
 - **Code documentation**: the code itself is properly documented
+- **Data documentation**: e.g. data source, link to metadata
 - **Project documentation** such as README/wiki is updated where necessary
     - scope/features of project: what does this project do? How can you run it?
     - setup of project

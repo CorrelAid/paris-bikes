@@ -4,7 +4,7 @@
 
 Filepath: data/raw/stationnement-voie-publique-emplacements.geojson
 Source: https://opendata.paris.fr/explore/dataset/stationnement-voie-publique-emplacements
-Metadata: N/A
+Metadata: https://opendata.paris.fr/explore/dataset/stationnement-voie-publique-emplacements
 
 Notes:
 - location of parking spots

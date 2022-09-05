@@ -18,6 +18,26 @@ TODO stakeholder list
 
 ## Project setup
 
+### Environment
+
+We use [conda](https://conda.io/projects/conda/en/latest/index.html) to manage our development environment.
+
+To setup a conda environment:
+
+```bash
+conda env create -f environment.yaml
+```
+
+See [here](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#create-env-from-file) for more information.
+
+To activate the conda environment:
+
+```bash
+conda activate paris-bikes
+```
+
+If you install a new package, you must update the `environment.yaml` file manually.
+
 ### Data management
 
 We use [DVC](https://dvc.org/) for data management and version control.

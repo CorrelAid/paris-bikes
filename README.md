@@ -48,11 +48,8 @@ DVC is easy to use and follows a syntax similar to git.
 
 **To install DVC:** 
 
-```bash
-pip install dvc[gdrive]
-``` 
-
-(check [here](https://dvc.org/doc/install) for other methods)
+DVC is already installed if you followed the [Environment](#environment) setup.
+If necessary, check [here](https://dvc.org/doc/install) for other installation methods.
 
 **To get DVC-managed files from the remote repository:**
 
@@ -64,7 +61,6 @@ dvc pull
 
 ```bash
 dvc add data/new_file.csv
-git add data/new_file.csv.dvc data/.gitignore
 git commit -m "Add new data file"
 ```
 

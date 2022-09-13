@@ -18,6 +18,26 @@ TODO stakeholder list
 
 ## Project setup
 
+### Environment
+
+We use [conda](https://conda.io/projects/conda/en/latest/index.html) to manage our development environment.
+
+To setup a conda environment:
+
+```bash
+conda env create -f environment.yaml
+```
+
+See [here](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#create-env-from-file) for more information.
+
+To activate the conda environment:
+
+```bash
+conda activate paris-bikes
+```
+
+If you install a new package, you must update the `environment.yaml` file manually.
+
 ### Data management
 
 We use [DVC](https://dvc.org/) for data management and version control.
@@ -28,11 +48,8 @@ DVC is easy to use and follows a syntax similar to git.
 
 **To install DVC:** 
 
-```bash
-pip install dvc[gdrive]
-``` 
-
-(check [here](https://dvc.org/doc/install) for other methods)
+DVC is already installed if you followed the [Environment](#environment) setup.
+If necessary, check [here](https://dvc.org/doc/install) for other installation methods.
 
 **To get DVC-managed files from the remote repository:**
 
@@ -44,7 +61,6 @@ dvc pull
 
 ```bash
 dvc add data/new_file.csv
-git add data/new_file.csv.dvc data/.gitignore
 git commit -m "Add new data file"
 ```
 

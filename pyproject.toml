@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "paris-bikes"
+version = "0.1.0"
+description = "Develop metrics for demand of new bike parkings in the city of Paris"
+authors = ["Your Name <you@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+geopandas = "^0.12.0"
+plotly = "^5.10.0"
+jupyterlab = "^3.5.0"
+dvc = {version = "^2.31.0", extras = ["gdrive"]}
+PyDrive2 = "^1.14.0"
+pandas = "^1.5.1"
+numpy = "^1.23.4"
+pygeos = "^0.13"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

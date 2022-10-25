@@ -1392,7 +1392,7 @@ python-versions = "*"
 
 [[package]]
 name = "nbclassic"
-version = "0.4.7"
+version = "0.4.5"
 description = "A web-based notebook environment for interactive computing"
 category = "main"
 optional = false
@@ -1516,7 +1516,7 @@ test = ["pytest (>=7.1)", "pytest-cov (>=3.0)", "codecov (>=2.1)"]
 
 [[package]]
 name = "notebook"
-version = "6.5.0"
+version = "6.5.1"
 description = "A web-based notebook environment for interactive computing"
 category = "main"
 optional = false
@@ -1529,7 +1529,7 @@ ipython-genutils = "*"
 jinja2 = "*"
 jupyter-client = ">=5.3.4"
 jupyter-core = ">=4.6.1"
-nbclassic = ">=0.4.0"
+nbclassic = "0.4.5"
 nbconvert = ">=5"
 nbformat = "*"
 nest-asyncio = ">=1.5"

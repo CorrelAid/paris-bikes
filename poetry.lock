@@ -429,6 +429,24 @@ python-versions = "*"
 six = "*"
 
 [[package]]
+name = "contourpy"
+version = "1.0.5"
+description = "Python library for calculating contours of 2D quadrilateral grids"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+numpy = ">=1.16"
+
+[package.extras]
+test-no-codebase = ["pillow", "matplotlib", "pytest"]
+test-minimal = ["pytest"]
+test = ["isort", "flake8", "pillow", "matplotlib", "pytest"]
+docs = ["sphinx-rtd-theme", "sphinx", "docutils (<0.18)"]
+bokeh = ["selenium", "bokeh"]
+
+[[package]]
 name = "cryptography"
 version = "38.0.2"
 description = "cryptography is a package which provides cryptographic recipes and primitives to Python developers."
@@ -446,6 +464,14 @@ pep8test = ["black", "flake8", "flake8-import-order", "pep8-naming"]
 sdist = ["setuptools-rust (>=0.11.4)"]
 ssh = ["bcrypt (>=3.1.5)"]
 test = ["pytest (>=6.2.0)", "pytest-benchmark", "pytest-cov", "pytest-subtests", "pytest-xdist", "pretend", "iso8601", "pytz", "hypothesis (>=1.11.4,!=3.79.2)"]
+
+[[package]]
+name = "cycler"
+version = "0.11.0"
+description = "Composable style cycles"
+category = "main"
+optional = false
+python-versions = ">=3.6"
 
 [[package]]
 name = "debugpy"
@@ -817,6 +843,28 @@ python-versions = ">=3.7"
 [package.dependencies]
 atpublic = ">=2.3"
 psutil = ">=5.9.0"
+
+[[package]]
+name = "fonttools"
+version = "4.38.0"
+description = "Tools to manipulate font files"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+all = ["fs (>=2.2.0,<3)", "lxml (>=4.0,<5)", "zopfli (>=0.1.4)", "lz4 (>=1.7.4.2)", "matplotlib", "sympy", "skia-pathops (>=0.5.0)", "uharfbuzz (>=0.23.0)", "brotlicffi (>=0.8.0)", "scipy", "brotli (>=1.0.1)", "munkres", "unicodedata2 (>=14.0.0)", "xattr"]
+graphite = ["lz4 (>=1.7.4.2)"]
+interpolatable = ["scipy", "munkres"]
+lxml = ["lxml (>=4.0,<5)"]
+pathops = ["skia-pathops (>=0.5.0)"]
+plot = ["matplotlib"]
+repacker = ["uharfbuzz (>=0.23.0)"]
+symfont = ["sympy"]
+type1 = ["xattr"]
+ufo = ["fs (>=2.2.0,<3)"]
+unicode = ["unicodedata2 (>=14.0.0)"]
+woff = ["zopfli (>=0.1.4)", "brotlicffi (>=0.8.0)", "brotli (>=1.0.1)"]
 
 [[package]]
 name = "frozenlist"
@@ -1305,6 +1353,14 @@ openapi = ["openapi-core (>=0.14.2)", "ruamel-yaml"]
 test = ["codecov", "ipykernel", "jupyter-server", "openapi-core (>=0.14.2,<0.15.0)", "openapi-spec-validator (<0.5)", "pytest-console-scripts", "pytest-cov", "pytest (>=7.0)", "ruamel-yaml", "strict-rfc3339"]
 
 [[package]]
+name = "kiwisolver"
+version = "1.4.4"
+description = "A fast implementation of the Cassowary constraint solver"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[[package]]
 name = "kombu"
 version = "5.2.4"
 description = "Messaging library for Python."
@@ -1339,6 +1395,26 @@ description = "Safely add untrusted strings to HTML/XML markup."
 category = "main"
 optional = false
 python-versions = ">=3.7"
+
+[[package]]
+name = "matplotlib"
+version = "3.6.1"
+description = "Python plotting package"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+contourpy = ">=1.0.1"
+cycler = ">=0.10"
+fonttools = ">=4.22.0"
+kiwisolver = ">=1.0.1"
+numpy = ">=1.19"
+packaging = ">=20.0"
+pillow = ">=6.2.0"
+pyparsing = ">=2.2.1"
+python-dateutil = ">=2.7"
+setuptools_scm = ">=7"
 
 [[package]]
 name = "matplotlib-inline"
@@ -1667,6 +1743,18 @@ description = "Tiny 'shelve'-like database with concurrency support"
 category = "main"
 optional = false
 python-versions = "*"
+
+[[package]]
+name = "pillow"
+version = "9.2.0"
+description = "Python Imaging Library (Fork)"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+docs = ["furo", "olefile", "sphinx (>=2.4)", "sphinx-copybutton", "sphinx-issues (>=3.0.1)", "sphinx-removed-in", "sphinxext-opengraph"]
+tests = ["check-manifest", "coverage", "defusedxml", "markdown2", "olefile", "packaging", "pyroma", "pytest", "pytest-cov", "pytest-timeout"]
 
 [[package]]
 name = "plotly"
@@ -2056,6 +2144,23 @@ objc = ["pyobjc-framework-cocoa"]
 nativelib = ["pywin32", "pyobjc-framework-cocoa"]
 
 [[package]]
+name = "setuptools-scm"
+version = "7.0.5"
+description = "the blessed package to manage your versions by scm tags"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+packaging = ">=20.0"
+tomli = ">=1.0.0"
+typing-extensions = "*"
+
+[package.extras]
+test = ["pytest (>=6.2)", "virtualenv (>20)"]
+toml = ["setuptools (>=42)"]
+
+[[package]]
 name = "shapely"
 version = "1.8.5.post1"
 description = "Geometric objects, predicates, and operations"
@@ -2339,7 +2444,7 @@ test = ["zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "4a345988027848b685aee3a21b3c4f6da6347a2b23e8bbc38e43651641540df2"
+content-hash = "7ed7016ac71ff3a5065e3db440ef347a6b8fa1e4d5f575ee1cdb768d3ad8bf33"
 
 [metadata.files]
 aiohttp = []
@@ -2375,7 +2480,9 @@ cligj = []
 colorama = []
 commonmark = []
 configobj = []
+contourpy = []
 cryptography = []
+cycler = []
 debugpy = []
 decorator = []
 defusedxml = []
@@ -2399,6 +2506,7 @@ filelock = []
 fiona = []
 flatten-dict = []
 "flufl.lock" = []
+fonttools = []
 frozenlist = []
 fsspec = []
 funcy = []
@@ -2429,8 +2537,10 @@ jupyter-server = []
 jupyterlab = []
 jupyterlab-pygments = []
 jupyterlab-server = []
+kiwisolver = []
 kombu = []
 markupsafe = []
+matplotlib = []
 matplotlib-inline = []
 mistune = []
 multidict = []
@@ -2454,6 +2564,7 @@ parso = []
 pathspec = []
 pexpect = []
 pickleshare = []
+pillow = []
 plotly = []
 prometheus-client = []
 prompt-toolkit = []
@@ -2488,6 +2599,7 @@ rsa = []
 "ruamel.yaml.clib" = []
 scmrepo = []
 send2trash = []
+setuptools-scm = []
 shapely = []
 shortuuid = []
 shtab = []

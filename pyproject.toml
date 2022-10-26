@@ -15,6 +15,7 @@ PyDrive2 = "^1.14.0"
 pandas = "^1.5.1"
 numpy = "^1.23.4"
 pygeos = "^0.13"
+matplotlib = "^3.6.1"
 
 [tool.poetry.dev-dependencies]
 

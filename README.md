@@ -30,6 +30,9 @@ To setup a development environment:
 poetry install
 ```
 
+> If you are on Apple Silicon, you might have to install `gdal`, a dependency of `fiona`/`geopandas`.
+You can do this with homebrew: `brew install gdal`
+
 To activate the virtual environment:
 
 ```bash

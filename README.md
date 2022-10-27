@@ -18,25 +18,26 @@ TODO stakeholder list
 
 ## Project setup
 
-### Environment
+### Development environment
 
-We use [conda](https://conda.io/projects/conda/en/latest/index.html) to manage our development environment.
+We use `python>=3.10` and [`poetry`](https://python-poetry.org/docs/basic-usage/) to manage our development environment.
+`poetry` manages dependencies and makes it easy to create a virtual environment that is compatible with our package.
+You can install `poetry` using `conda` or `pip`.
 
-To setup a conda environment:
-
-```bash
-conda env create -f environment.yaml
-```
-
-See [here](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#create-env-from-file) for more information.
-
-To activate the conda environment:
+To setup a development environment:
 
 ```bash
-conda activate paris-bikes
+poetry install
 ```
 
-If you install a new package, you must update the `environment.yaml` file manually.
+> If you are on Apple Silicon, you might have to install `gdal`, a dependency of `fiona`/`geopandas`.
+You can do this with homebrew: `brew install gdal`
+
+To activate the virtual environment:
+
+```bash
+poetry shell
+```
 
 ### Data management
 

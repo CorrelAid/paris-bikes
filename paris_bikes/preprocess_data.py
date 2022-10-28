@@ -1,5 +1,6 @@
 import geopandas as gpd
 import pandas as pd
+from geopy.geocoders import Nominatim
 
 
 def get_parkings_per_iris(df_parking_raw: gpd.GeoDataFrame, df_iris: gpd.GeoDataFrame) -> pd.DataFrame:
@@ -46,3 +47,74 @@ def get_population_per_iris(df_iris_raw: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     df_iris = df_iris.loc[~df_iris.index.duplicated()]
 
     return df_iris
+
+## cleaning museum data
+# Removes substring behind a separator
+def strip(sep, name):
+    try:
+        for s in sep:
+            stripped = name.split(s, 1)[0]
+            name = stripped
+        return stripped
+    except:
+        return None
+
+# returns geopoint for a string
+def my_geocoder(row):
+    try:
+        point = geolocator.geocode(row).point
+        return point
+    except:
+        return None
+
+# the whole museum data cleaning process in one function
+def clean_museum_data(df):
+    """Get the population per IRIS.
+
+    Args:
+        df (pd.Dataframe): Raw data with frequentation of national museums in Paris in years 2019 and 2020
+
+    Returns:
+        df_museums (pd.Dataframe): Clean museum dataset with geolocation (columns: name, type, visitors, year, geopoint)
+    """
+    
+    geolocator = Nominatim(user_agent="correlaid-paris-bikes")
+    
+    # drop museums that are closed
+    df = df[df["Note"].isna()]
+    
+    # if data for more than one year, keep only most recent one
+    df.sort_values("Année", inplace=True)
+    df = df[(~df['ID MUSEOFILE'].duplicated(keep="last")) | df['ID MUSEOFILE'].isna()]
+    
+    # manual replacement of some problematic strings
+    df["MUSEE"] = df["NOM DU MUSEE"].str.replace("Établissement public du musée d'Orsay et du musée de l'Orangerie - Valéry Giscard d'Estaing - Musée d'Orsay", "Musée d'Orsay")
+    df["MUSEE"] = df["MUSEE"].str.replace("Établissement public du musée d'Orsay et du musée de l'Orangerie - Valéry Giscard d'Estaing - Musée de l'Orangerie", "Musée de l'Orangerie")
+    df["MUSEE"] = df["MUSEE"].str.replace("Musée de l'Ecole Nationale Supérieure des Beaux-Arts","Ecole Nationale Supérieure des Beaux-Arts")
+    df["MUSEE"] = df["MUSEE"].str.replace("Musée National Auguste Rodin","Musée Rodin Paris")
+    df["MUSEE"] = df["MUSEE"].str.replace("Musée d'Art Moderne de la ville de Paris","Musée d'Art Moderne de Paris")
+    df["MUSEE"] = df["MUSEE"].str.replace("Établissement Public de la Porte Dorée","Palais de la Porte Dorée")
+    df["MUSEE"] = df["MUSEE"].str.replace("Etablissement Public du Musée des Arts Asiatiques Guimet","Musée Guimet")
+    df["MUSEE"] = df["MUSEE"].str.replace("Musée du 11 Conti","La Monnaie de Paris")
+    df["MUSEE"] = df["MUSEE"].str.replace("Musée Yves Saint Laurent","Musée Yves Saint Laurent Paris")
+    
+    # remove anything after bracket, dash, or comma
+    sep_list = [" ("," -",","]
+    df["MUSEE"] = df.apply(lambda x: strip(sep_list, x["MUSEE"]), axis=1)
+    
+    # geolocate museums
+    df["geopoint"] = df.apply(lambda x: my_geocoder(x["MUSEE"]), axis=1)
+    
+    print("{}% of addresses were geocoded!".format(
+   (1 - sum(pd.isnull(df["geopoint"])) / len(df)) * 100))
+    
+    # prepare cleaned dataframe (select and rename columns, add "type" column, fix datatypes, reset index)
+    df['type'] = "museum"
+    df_museum = df[["MUSEE", "type", "TOTAL","Année","geopoint"]].rename({'MUSEE':'name','TOTAL':'visitors','Année':'year'}, axis=1)
+
+    df_museum[['visitors','year']] = df_museum[['visitors','year']].astype('Int64')
+    df_museum = df_museum.reset_index(drop=True)
+    
+    return df_museum
+    
+    

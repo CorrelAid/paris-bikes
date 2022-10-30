@@ -82,7 +82,7 @@ def my_geocoder(row, geolocator):
     except:
         return None
 
-def clean_museum_data(df):
+def clean_museum_data(df_museum_raw):
     """Geocoding and cleaning museum frequentation data.
 
     Args:
@@ -91,6 +91,7 @@ def clean_museum_data(df):
     Returns:
         df_museums (pd.Dataframe): Clean museum dataset with geolocation (columns: name, type, visitors, year, geopoint).
     """
+    df = df_museum_raw.copy()
     geolocator = Nominatim(user_agent="correlaid-paris-bikes")
     
     # drop museums that are closed

@@ -46,3 +46,43 @@ def get_population_per_iris(df_iris_raw: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     df_iris = df_iris.loc[~df_iris.index.duplicated()]
 
     return df_iris
+
+def get_school_capacity_per_iris(df_school_raw: gpd.GeoDataFrame, df_iris: gpd.GeoDataFrame) -> pd.DataFrame:
+    """Compute school capacity per IRIS.
+
+    Args:
+        df_school_raw (gpd.GeoDataFrame): Raw data with location and capacity of Paris schools.
+        df_iris (gpd.GeoDataFrame): Raw data with location of all IRIS within the city.
+
+    Returns:
+        pd.DataFrame: School capacity per IRIS.
+    """
+    # Select relevant variables and rename them
+    df_schools = df_schools_raw[['c_cainsee', 'l_ep_min', 'c_niv2', 'c_niv3', 'lib_qn2', 'val_qn2', 'geometry']]
+    df_schools = df_schools.rename(
+        columns={
+            "c_cainsee": "insee_code",
+            "l_ep_min": "school_name",
+            "c_niv2": "school_type",
+            "c_niv3": "school_subtype",
+            "val_qn2": "capacity"
+        }
+    )
+
+    # Filter only IRIS in Paris
+    df_schools = df_schools[df_schools['insee_code'].between(75000, 75999)]
+
+    # Filter only primary and secondary education institutions (other institutions have no info on capacity)
+    df_schools = df_schools[(df_schools['school_type'] == 101) | (df_schools['school_type'] == 102)]
+
+    # Impute missing values of school capacity with mean capacity of similar type
+    df_schools['capacity'] = df_schools['capacity'].fillna(df_schools.groupby('school_subtype')['capacity'].transform('mean'))
+
+    # Identify the IRIS of each school
+    df_schools = df_schools.sjoin(df_iris.loc[:, ["geometry"]], how="inner")
+
+    # Get the total school capacity per IRIS
+    df_schools = df_schools.groupby("index_right")["capacity"].sum()
+    df_schools.index.rename("iris", inplace=True)
+
+    return df_schools

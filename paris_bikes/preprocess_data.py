@@ -88,29 +88,29 @@ def clean_museum_data(df):
     df = df[(~df['ID MUSEOFILE'].duplicated(keep="last")) | df['ID MUSEOFILE'].isna()]
     
     # manual replacement of some problematic strings
-    df["MUSEE"] = df["NOM DU MUSEE"].str.replace("Établissement public du musée d'Orsay et du musée de l'Orangerie - Valéry Giscard d'Estaing - Musée d'Orsay", "Musée d'Orsay")
-    df["MUSEE"] = df["MUSEE"].str.replace("Établissement public du musée d'Orsay et du musée de l'Orangerie - Valéry Giscard d'Estaing - Musée de l'Orangerie", "Musée de l'Orangerie")
-    df["MUSEE"] = df["MUSEE"].str.replace("Musée de l'Ecole Nationale Supérieure des Beaux-Arts","Ecole Nationale Supérieure des Beaux-Arts")
-    df["MUSEE"] = df["MUSEE"].str.replace("Musée National Auguste Rodin","Musée Rodin Paris")
-    df["MUSEE"] = df["MUSEE"].str.replace("Musée d'Art Moderne de la ville de Paris","Musée d'Art Moderne de Paris")
-    df["MUSEE"] = df["MUSEE"].str.replace("Établissement Public de la Porte Dorée","Palais de la Porte Dorée")
-    df["MUSEE"] = df["MUSEE"].str.replace("Etablissement Public du Musée des Arts Asiatiques Guimet","Musée Guimet")
-    df["MUSEE"] = df["MUSEE"].str.replace("Musée du 11 Conti","La Monnaie de Paris")
-    df["MUSEE"] = df["MUSEE"].str.replace("Musée Yves Saint Laurent","Musée Yves Saint Laurent Paris")
+    df["name"] = df["NOM DU MUSEE"].str.replace("Établissement public du musée d'Orsay et du musée de l'Orangerie - Valéry Giscard d'Estaing - Musée d'Orsay", "Musée d'Orsay")
+    df["name"] = df["name"].str.replace("Établissement public du musée d'Orsay et du musée de l'Orangerie - Valéry Giscard d'Estaing - Musée de l'Orangerie", "Musée de l'Orangerie")
+    df["name"] = df["name"].str.replace("Musée de l'Ecole Nationale Supérieure des Beaux-Arts","Ecole Nationale Supérieure des Beaux-Arts")
+    df["name"] = df["name"].str.replace("Musée National Auguste Rodin","Musée Rodin Paris")
+    df["name"] = df["name"].str.replace("Musée d'Art Moderne de la ville de Paris","Musée d'Art Moderne de Paris")
+    df["name"] = df["name"].str.replace("Établissement Public de la Porte Dorée","Palais de la Porte Dorée")
+    df["name"] = df["name"].str.replace("Etablissement Public du Musée des Arts Asiatiques Guimet","Musée Guimet")
+    df["name"] = df["name"].str.replace("Musée du 11 Conti","La Monnaie de Paris")
+    df["name"] = df["name"].str.replace("Musée Yves Saint Laurent","Musée Yves Saint Laurent Paris")
     
     # remove anything after bracket, dash, or comma
     sep_list = [" ("," -",","]
-    df["MUSEE"] = df.apply(lambda x: strip(sep_list, x["MUSEE"]), axis=1)
+    df["name"] = df.apply(lambda x: strip(sep_list, x["name"]), axis=1)
     
     # geolocate museums
-    df["geopoint"] = df.apply(lambda x: my_geocoder(x["MUSEE"]), axis=1)
+    df["geopoint"] = df.apply(lambda x: my_geocoder(x["name"]), axis=1)
     
     print("{}% of addresses were geocoded!".format(
    (1 - sum(pd.isnull(df["geopoint"])) / len(df)) * 100))
     
     # prepare cleaned dataframe (select and rename columns, add "type" column, fix datatypes, reset index)
     df['type'] = "museum"
-    df_museum = df[["MUSEE", "type", "TOTAL","Année","geopoint"]].rename({'MUSEE':'name','TOTAL':'visitors','Année':'year'}, axis=1)
+    df_museum = df[["name", "type", "TOTAL","Année","geopoint"]].rename({'TOTAL':'visitors','Année':'year'}, axis=1)
 
     df_museum[['visitors','year']] = df_museum[['visitors','year']].astype('Int64')
     df_museum = df_museum.reset_index(drop=True)

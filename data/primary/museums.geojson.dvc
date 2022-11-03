@@ -1,0 +1,4 @@
+outs:
+- md5: d8eb071bc8c0d26b967d3751eeee9d42
+  size: 11247
+  path: museums.geojson

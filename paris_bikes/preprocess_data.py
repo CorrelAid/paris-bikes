@@ -65,7 +65,7 @@ def get_school_capacity_per_iris(df_school_raw: gpd.GeoDataFrame, df_iris: gpd.G
             "l_ep_min": "school_name",
             "c_niv2": "school_type",
             "c_niv3": "school_subtype",
-            "val_qn2": "capacity"
+            "val_qn2": "school_capacity"
         }
     )
 
@@ -76,13 +76,13 @@ def get_school_capacity_per_iris(df_school_raw: gpd.GeoDataFrame, df_iris: gpd.G
     df_schools = df_schools[(df_schools['school_type'] == 101) | (df_schools['school_type'] == 102)]
 
     # Impute missing values of school capacity with mean capacity of similar type
-    df_schools['capacity'] = df_schools['capacity'].fillna(df_schools.groupby('school_subtype')['capacity'].transform('mean'))
+    df_schools['school_capacity'] = df_schools['school_capacity'].fillna(df_schools.groupby('school_subtype')['school_capacity'].transform('mean'))
 
     # Identify the IRIS of each school
     df_schools = df_schools.sjoin(df_iris.loc[:, ["geometry"]], how="inner")
 
     # Get the total school capacity per IRIS
-    df_schools = df_schools.groupby("index_right")["capacity"].sum()
+    df_schools = df_schools.groupby("index_right")[["school_capacity"]].sum()
     df_schools.index.rename("iris", inplace=True)
 
     return df_schools

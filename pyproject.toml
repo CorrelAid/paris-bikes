@@ -16,6 +16,7 @@ pandas = "^1.5.1"
 numpy = "^1.23.4"
 pygeos = "^0.13"
 matplotlib = "^3.6.1"
+geopy = "^2.2.0"
 
 [tool.poetry.dev-dependencies]
 

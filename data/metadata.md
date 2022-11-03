@@ -39,3 +39,13 @@ Metadata: https://opendata.paris.fr/explore/dataset/espaces_verts/information/
 Notes:
 
 - Not all parks are present (e.g. Tuileries, Luxembourg, Plantes, ...)
+
+## Metro stations
+
+Filepath: data/raw/trafic-annuel-entrant-par-station-du-reseau-ferre-2021.csv
+
+Source: https://data.ratp.fr/explore/dataset/trafic-annuel-entrant-par-station-du-reseau-ferre-2021/information/
+
+Notes:
+
+- Only includes entries in the station, but not exchanges between lines

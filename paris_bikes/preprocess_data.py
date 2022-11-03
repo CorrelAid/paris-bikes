@@ -29,7 +29,6 @@ def get_parkings_per_iris(df_parking_raw: gpd.GeoDataFrame, df_iris: gpd.GeoData
 
     return pd.DataFrame(df_parks_per_iris)
 
-
 def get_population_per_iris(df_iris_raw: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     """Get the population per IRIS.
 
@@ -85,6 +84,27 @@ def my_geocoder(row, column, geolocator):
     except:
         return None
 
+def geocode_from_location_name(df_in: pd.DataFrame, location_name_column):
+    """Geocode locations based on a column with names of the locations.
+
+    Args:
+        df_in (pd.DataFrame): Dataframe with location names to be geocoded
+        location_name_column (string): Name of column with the location names to be geocoded
+
+    Returns:
+        gpd.GeoDataFrame: Dataframe with geocoded locations
+    """
+    geolocator = Nominatim(user_agent="correlaid-paris-bikes")
+    df = df_in.apply(lambda x: my_geocoder(x, location_name_column, geolocator), axis=1)
+
+    print("{}% of rows were geocoded!".format((1 - sum(pd.isnull(df["longitude"])) / len(df)) * 100))
+
+    # transform to GeoDataFrame and drop longitude and latitude columns
+    gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.longitude, df.latitude), crs="EPSG:4326")
+    gdf = gdf.drop(["longitude", "latitude"], axis=1)
+
+    return gdf
+
 def clean_museum_data(df_museum_raw):
     """Geocoding and cleaning museum frequentation data.
 
@@ -95,15 +115,14 @@ def clean_museum_data(df_museum_raw):
         gpd.GeoDataFrame: Clean museum dataset with geolocation (columns: name, type, visitors, year, geometry).
     """
     df = df_museum_raw.copy()
-    geolocator = Nominatim(user_agent="correlaid-paris-bikes")
-    
+
     # drop museums that are closed
     df = df[df["Note"].isna()]
-    
+
     # if data for more than one year, keep only most recent one
     df.sort_values("Année", inplace=True)
     df = df[(~df['ID MUSEOFILE'].duplicated(keep="last")) | df['ID MUSEOFILE'].isna()]
-    
+
     # manual replacement of museum names which geocoder cannot find
     df["name"] = df["NOM DU MUSEE"].str.replace("Établissement public du musée d'Orsay et du musée de l'Orangerie - Valéry Giscard d'Estaing - Musée d'Orsay", "Musée d'Orsay")
     df["name"] = df["name"].str.replace("Établissement public du musée d'Orsay et du musée de l'Orangerie - Valéry Giscard d'Estaing - Musée de l'Orangerie", "Musée de l'Orangerie")
@@ -114,31 +133,66 @@ def clean_museum_data(df_museum_raw):
     df["name"] = df["name"].str.replace("Etablissement Public du Musée des Arts Asiatiques Guimet","Musée Guimet")
     df["name"] = df["name"].str.replace("Musée du 11 Conti","La Monnaie de Paris")
     df["name"] = df["name"].str.replace("Musée Yves Saint Laurent","Musée Yves Saint Laurent Paris")
-    
+
     # remove anything after bracket, dash, or comma
     sep_list = [" ("," -",","]
     df["name"] = df.apply(lambda x: strip(sep_list, x["name"]), axis=1)
-    
+
     # geolocate museums
-    # df["geopoint"] = df.apply(lambda x: my_geocoder(x["name"], geolocator), axis=1)
-    df = df.apply(lambda x: my_geocoder(x, "name", geolocator), axis=1)
-    
-    print("{}% of addresses were geocoded!".format(
-   (1 - sum(pd.isnull(df["longitude"])) / len(df)) * 100))
-    
+    gdf = geocode_from_location_name(df, "name")
+
     # prepare cleaned dataframe (select and rename columns, add "type" column, fix datatypes, reset index)
-    df['type'] = "museum"
-    df_museum = df[["name", "type", "TOTAL","Année","longitude", "latitude"]].rename({'TOTAL':'visitors','Année':'year'}, axis=1)
+    gdf['type'] = "museum"
+    gdf_museum = gdf[["name", "type", "TOTAL","Année","longitude", "latitude"]].rename({'TOTAL':'visitors','Année':'year'}, axis=1)
 
-    df_museum[['visitors','year']] = df_museum[['visitors','year']].astype('Int64')
-    df_museum = df_museum.reset_index(drop=True)
+    gdf_museum[['visitors','year']] = gdf_museum[['visitors','year']].astype('Int64')
+    gdf_museum = gdf_museum.reset_index(drop=True)
 
-    # transform to GeoDataFrame and drop longitude and latitude columns
-    gdf_museum = gpd.GeoDataFrame(
-    df_museum, geometry=gpd.points_from_xy(df_museum.longitude, df_museum.latitude))
-    gdf_museum = gdf_museum.drop(["longitude", "latitude"], axis=1)
-    print(gdf_museum)
-    
     return gdf_museum
-    
-    
+
+def get_metro_passengers_per_iris(df_metro_raw: pd.DataFrame, df_iris: gpd.GeoDataFrame) -> pd.DataFrame:
+    """Compute number of metro passengers per IRIS.
+
+    Args:
+        df_metro_raw (pd.DataFrame): Raw data with number of metro passengers per station
+        df_iris (gpd.GeoDataFrame): Raw data with location of all IRIS within the city.
+
+    Returns:
+        pd.DataFrame: Number of metro passengers per IRIS.
+    """
+    # Clean metro data
+    # Include only Métro stations (assuming that RER are counted on the train dataset)
+    # Include only stations in Paris
+    # Include only relevant columns
+    df_metro = (
+        df_metro_raw
+        .loc[
+            df_metro_raw["Réseau"].isin(["Métro"]) &
+            df_metro_raw["Ville"].isin(["Paris"]),
+            ["Station", "Trafic"]
+        ]
+        .rename(columns={"Station": "station", "Trafic": "nb_metro_passengers"})
+        .copy()
+    )
+
+    df_metro["station"] = df_metro["station"].str.lower()
+    df_metro["station"] = df_metro["station"].str.replace("bibliotheque", "bibliotheque francois mitterand")
+
+    # Add string ", station" to every station name, to avoid confusions with stations names that are too general
+    # E.g. "Hotel de Ville" (city hall) exists in every city
+    df_metro["station_city"] = df_metro["station"] + ", paris"
+
+    # Geocode station names
+    df_metro = (
+        geocode_from_location_name(df_metro, "station_city")
+        .drop(columns="station_city")
+    )
+
+    # TODO this could also be refactored into a separate function, since it's already used in other functions
+    # Identify the IRIS of each station
+    df_metro = df_metro.sjoin(df_iris.loc[:, ["geometry"]], how="inner")
+    # Get the total number of metro passengers per IRIS
+    df_metro = df_metro.groupby("index_right")[["nb_metro_passengers"]].sum()
+    df_metro.index.rename("iris", inplace=True)
+
+    return df_metro

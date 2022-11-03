@@ -86,3 +86,48 @@ def get_school_capacity_per_iris(df_school_raw: gpd.GeoDataFrame, df_iris: gpd.G
     df_schools.index.rename("iris", inplace=True)
 
     return df_schools
+
+def get_shops_per_iris(df_shopping_raw: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+    """Compute number of shops per IRIS (weighed by shop size). Also includes
+    hotels, restaurants, etc.
+
+    Args:
+        df_shopping_raw (gpd.GeoDataFrame): Raw data with location, size and
+        type of Paris shops.
+
+    Returns:
+        pd.DataFrame: School capacity per IRIS.
+    """
+    # Select relevant variables
+    df_shopping = df_shopping_raw.loc[:,('IRIS',
+                                       'CODE_ACTIVITE',
+                                       'LIBELLE_ACTIVITE',
+                                       'REGROUPEMENT_8_POSTES',
+                                       'LIBELLE_REGROUPEMENT_8_POSTES',
+                                       'SURFACE',
+                                       'geometry')]
+    # Rename variables
+    df_shopping = df_shopping.rename(
+        columns={
+                "IRIS": "iris_code",
+                "CODE_ACTIVITE": "detailed_type_code",
+                "LIBELLE_ACTIVITE": "detailed_type_text",
+                "REGROUPEMENT_8_POSTES": "general_type_code",
+                "LIBELLE_REGROUPEMENT_8_POSTES": "general_type_text",
+                "SURFACE": "surface_text"
+            }
+        )
+
+    # Map quantifiable values to different surfaces
+    surface_dict = {'moins de 300 m²':1, 'de 300 à 1.000 m²':2, '1.000 m² ou plus':3}
+    df_shopping['surface_code'] = df_shopping['surface_text'].map(surface_dict)
+
+    # filter out vacant shops
+    df_shopping = df_shopping[df_shopping['general_type_text'] != 'Local vacant']
+
+    # group by IRIS (based on shop size categories)
+    df_shopping = df_shopping.groupby('iris_code')[['surface_code']].sum()
+
+    df_shopping = df_shopping.rename(columns={'surface_code':'shops_weighed'})
+
+    return df_shopping

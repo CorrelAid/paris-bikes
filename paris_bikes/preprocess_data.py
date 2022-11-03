@@ -50,7 +50,7 @@ def get_population_per_iris(df_iris_raw: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
 
 def strip(sep, name):
     """Remove substring behind a separator.
-    
+
     Args:
         sep (string): Separator.
         name (string): The string to be shortened.
@@ -66,19 +66,22 @@ def strip(sep, name):
     except:
         return None
 
-def my_geocoder(row, geolocator):
+def my_geocoder(row, column, geolocator):
     """Return geocode for a string.
 
     Args:
-        row (row of pd.DataFrame): Row that contains an column with the string to geolocate.
+        row (row of pd.DataFrame): Row of dataframe.
+        column (string): Label of the column that contains the string to geocode.
         geolocator (Nominatim): Tool to geocode OpenStreetMap data.
     
     Returns:
         geopy.location.Location.point: Geolocation point for the input string.
     """
     try:
-        point = geolocator.geocode(row).point
-        return point
+        location = geolocator.geocode(row[column])
+        row["longitude"] = location.longitude
+        row["latitude"] = location.latitude
+        return row
     except:
         return None
 
@@ -89,7 +92,7 @@ def clean_museum_data(df_museum_raw):
         df (pd.Dataframe): Raw data with frequentation of national museums in Paris in years 2019 and 2020.
 
     Returns:
-        df_museums (pd.Dataframe): Clean museum dataset with geolocation (columns: name, type, visitors, year, geopoint).
+        gpd.GeoDataFrame: Clean museum dataset with geolocation (columns: name, type, visitors, year, geometry).
     """
     df = df_museum_raw.copy()
     geolocator = Nominatim(user_agent="correlaid-paris-bikes")
@@ -117,18 +120,25 @@ def clean_museum_data(df_museum_raw):
     df["name"] = df.apply(lambda x: strip(sep_list, x["name"]), axis=1)
     
     # geolocate museums
-    df["geopoint"] = df.apply(lambda x: my_geocoder(x["name"], geolocator), axis=1)
+    # df["geopoint"] = df.apply(lambda x: my_geocoder(x["name"], geolocator), axis=1)
+    df = df.apply(lambda x: my_geocoder(x, "name", geolocator), axis=1)
     
     print("{}% of addresses were geocoded!".format(
-   (1 - sum(pd.isnull(df["geopoint"])) / len(df)) * 100))
+   (1 - sum(pd.isnull(df["longitude"])) / len(df)) * 100))
     
     # prepare cleaned dataframe (select and rename columns, add "type" column, fix datatypes, reset index)
     df['type'] = "museum"
-    df_museum = df[["name", "type", "TOTAL","Année","geopoint"]].rename({'TOTAL':'visitors','Année':'year'}, axis=1)
+    df_museum = df[["name", "type", "TOTAL","Année","longitude", "latitude"]].rename({'TOTAL':'visitors','Année':'year'}, axis=1)
 
     df_museum[['visitors','year']] = df_museum[['visitors','year']].astype('Int64')
     df_museum = df_museum.reset_index(drop=True)
+
+    # transform to GeoDataFrame and drop longitude and latitude columns
+    gdf_museum = gpd.GeoDataFrame(
+    df_museum, geometry=gpd.points_from_xy(df_museum.longitude, df_museum.latitude))
+    gdf_museum = gdf_museum.drop(["longitude", "latitude"], axis=1)
+    print(gdf_museum)
     
-    return df_museum
+    return gdf_museum
     
     

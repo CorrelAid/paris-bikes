@@ -141,7 +141,23 @@ def clean_museum_data(df_museum_raw):
     
     return gdf_museum
     
-    
+def get_museum_visitors_per_iris(df_museums_clean: gpd.GeoDataFrame, df_iris: gpd.GeoDataFrame) -> pd.DataFrame:
+    """Compute yearly museum visitors per IRIS.
+    Args:
+        df_museums_clean (gpd.GeoDataFrame): Cleaned data with location and number of visitors in national museums per year.
+        df_iris (gpd.GeoDataFrame): Raw data with location of all IRIS within the city.
+    Returns:
+        pd.DataFrame: Number of yearly museum visitors per IRIS.
+    """
+    # Identify the IRIS of each museum
+    df_museums = df_museums_clean.sjoin(df_iris.loc[:, ["geometry"]], how="inner")
+
+    # Get the total number of yearly visitors per IRIS
+    df_museums = df_museums.groupby("index_right")[["visitors"]].sum()
+    df_museums.index.rename("iris", inplace=True)
+
+    return df_museums
+
 def get_idfm_parkings_per_iris(df_idfm_raw: gpd.GeoDataFrame, df_iris: gpd.GeoDataFrame) -> pd.DataFrame:
     """Compute Île de France Mobilité parking spots (in train stations) per IRIS.
     Args:

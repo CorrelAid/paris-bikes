@@ -12,7 +12,6 @@ def create_map(df: gpd.GeoDataFrame, var: str, width = 600, height = 400):
     Returns:
         plotly map
     """
-
     # Create basemap
     fig = px.choropleth(
         df,

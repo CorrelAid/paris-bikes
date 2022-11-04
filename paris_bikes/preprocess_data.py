@@ -88,8 +88,9 @@ def get_school_capacity_per_iris(df_school_raw: gpd.GeoDataFrame, df_iris: gpd.G
     return df_schools
 
 def get_shops_per_iris(df_shopping_raw: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
-    """Compute number of shops per IRIS (weighed by shop size). Also includes
-    hotels, restaurants, etc.
+    """Compute number of shops per IRIS (weighed by shop size). 
+    
+    Also includes hotels, restaurants, etc.
 
     Args:
         df_shopping_raw (gpd.GeoDataFrame): Raw data with location, size and

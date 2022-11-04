@@ -3,7 +3,6 @@ import plotly.express as px
 
 
 def create_map(df: gpd.GeoDataFrame, var: str, width = 600, height = 400):
-
     """Compute number of bike parking spots per IRIS.
 
     Args:

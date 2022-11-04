@@ -142,3 +142,31 @@ def clean_museum_data(df_museum_raw):
     return gdf_museum
     
     
+def get_idfm_parkings_per_iris(df_idfm_raw: gpd.GeoDataFrame, df_iris: gpd.GeoDataFrame) -> pd.DataFrame:
+    """Compute Île de France Mobilité parking spots (in train stations) per IRIS.
+    Args:
+        df_idfm_raw (gpd.GeoDataFrame): Raw data with location and number of parking spots in IDFM parking facilities.
+        df_iris (gpd.GeoDataFrame): Raw data with location of all IRIS within the city.
+    Returns:
+        pd.DataFrame: Number of IDFM parking spots per IRIS.
+    """
+    # Select relevant variables and rename them
+    df_idfm = df_idfm_raw[['zdcname', 'type', 'num_docks_available', 'insee_code', 'geometry']]
+    df_idfm = df_idfm.rename(
+        columns={
+            "zdcname": "name",
+            "num_docks_available": "nb_parking_spots"
+        }
+    )
+
+    # Filter only IRIS in Paris
+    df_idfm = df_idfm[df_idfm['insee_code'].between(75000, 75999)]
+
+    # Identify the IRIS of each parking facility
+    df_idfm = df_idfm.sjoin(df_iris.loc[:, ["geometry"]], how="inner")
+
+    # Get the total number of parking spots per IRIS
+    df_idfm = df_idfm.groupby("index_right")[["nb_parking_spots"]].sum()
+    df_idfm.index.rename("iris", inplace=True)
+
+    return df_idfm

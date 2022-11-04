@@ -129,6 +129,6 @@ def get_shops_per_iris(df_shopping_raw: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     # group by IRIS (based on shop size categories)
     df_shopping = df_shopping.groupby('iris_code')[['surface_code']].sum()
 
-    df_shopping = df_shopping.rename(columns={'surface_code':'shops_weighed'})
+    df_shopping = df_shopping.rename(columns={'surface_code':'shops_weighted'})
 
     return df_shopping

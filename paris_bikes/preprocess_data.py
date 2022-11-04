@@ -87,8 +87,15 @@ def get_school_capacity_per_iris(df_school_raw: gpd.GeoDataFrame, df_iris: gpd.G
 
     return df_schools
 
+<<<<<<< HEAD
 def get_shops_per_iris(df_shopping_raw: gpd.GeoDataFrame, df_iris: gpd.GeoDataFrame) -> pd.DataFrame:
     """Compute number of businesses per IRIS (weighed by shop size).
+=======
+def get_shops_per_iris(df_shopping_raw: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+    """Compute number of shops per IRIS (weighed by shop size). 
+    
+    Also includes hotels, restaurants, etc.
+>>>>>>> b6b0123912cff8f3442c9a50390ef4f2b515937a
 
     Args:
         df_shopping_raw (gpd.GeoDataFrame): Raw data with location, size and
@@ -111,9 +118,13 @@ def get_shops_per_iris(df_shopping_raw: gpd.GeoDataFrame, df_iris: gpd.GeoDataFr
     # Identify the IRIS of each shop
     df_shopping = df_shopping.sjoin(df_iris.loc[:, ["geometry"]], how="inner")
 
+<<<<<<< HEAD
     # Group by IRIS (weighted by shop size categories)
     df_shopping = df_shopping.groupby("index_right")[["surface_code"]].sum()
     df_shopping.index.rename("iris", inplace=True)
     df_shopping.rename(columns={'surface_code':'shops_weighted'}, inplace=True)
+=======
+    df_shopping = df_shopping.rename(columns={'surface_code':'shops_weighted'})
+>>>>>>> b6b0123912cff8f3442c9a50390ef4f2b515937a
 
     return df_shopping

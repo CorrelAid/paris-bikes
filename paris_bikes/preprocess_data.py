@@ -242,7 +242,7 @@ def get_metro_rer_passengers_per_iris(df_metro_raw: pd.DataFrame, df_iris: gpd.G
             df_metro_raw["Ville"].isin(["Paris"]),
             ["Station", "Trafic"]
         ]
-        .rename(columns={"Station": "station", "Trafic": "nb_metro_passengers"})
+        .rename(columns={"Station": "station", "Trafic": "nb_metro_rer_passengers"})
         .copy()
     )
 
@@ -263,7 +263,7 @@ def get_metro_rer_passengers_per_iris(df_metro_raw: pd.DataFrame, df_iris: gpd.G
     df_metro = df_metro.sjoin(df_iris.loc[:, ["geometry"]], how="inner")
 
     # Get the total number of metro passengers per IRIS
-    df_metro = df_metro.groupby("index_right")[["nb_metro_passengers"]].sum()
+    df_metro = df_metro.groupby("index_right")[["nb_metro_rer_passengers"]].sum()
     df_metro.index.rename("iris", inplace=True)
 
     return df_metro

@@ -46,6 +46,78 @@ def get_population_per_iris(df_iris_raw: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     df_iris = df_iris.loc[~df_iris.index.duplicated()]
 
     return df_iris
+    
+
+def get_school_capacity_per_iris(df_school_raw: gpd.GeoDataFrame, df_iris: gpd.GeoDataFrame) -> pd.DataFrame:
+    """Compute school capacity per IRIS.
+
+    Args:
+        df_school_raw (gpd.GeoDataFrame): Raw data with location and capacity of Paris schools.
+        df_iris (gpd.GeoDataFrame): Raw data with location of all IRIS within the city.
+
+    Returns:
+        pd.DataFrame: School capacity per IRIS.
+    """
+    # Select relevant variables and rename them
+    df_schools = df_schools_raw[['c_cainsee', 'l_ep_min', 'c_niv2', 'c_niv3', 'lib_qn2', 'val_qn2', 'geometry']]
+    df_schools = df_schools.rename(
+        columns={
+            "c_cainsee": "insee_code",
+            "l_ep_min": "school_name",
+            "c_niv2": "school_type",
+            "c_niv3": "school_subtype",
+            "val_qn2": "school_capacity"
+        }
+    )
+
+    # Filter only IRIS in Paris
+    df_schools = df_schools[df_schools['insee_code'].between(75000, 75999)]
+
+    # Filter only primary and secondary education institutions (other institutions have no info on capacity)
+    df_schools = df_schools[(df_schools['school_type'] == 101) | (df_schools['school_type'] == 102)]
+
+    # Impute missing values of school capacity with mean capacity of similar type
+    df_schools['school_capacity'] = df_schools['school_capacity'].fillna(df_schools.groupby('school_subtype')['school_capacity'].transform('mean'))
+
+    # Identify the IRIS of each school
+    df_schools = df_schools.sjoin(df_iris.loc[:, ["geometry"]], how="inner")
+
+    # Get the total school capacity per IRIS
+    df_schools = df_schools.groupby("index_right")[["school_capacity"]].sum()
+    df_schools.index.rename("iris", inplace=True)
+
+    return df_schools
+
+def get_shops_per_iris(df_shopping_raw: gpd.GeoDataFrame, df_iris: gpd.GeoDataFrame) -> pd.DataFrame:
+    """Compute number of businesses per IRIS (weighed by shop size).
+
+    Args:
+        df_shopping_raw (gpd.GeoDataFrame): Raw data with location, size and
+        type of Paris shops.
+
+    Returns:
+        pd.DataFrame: School capacity per IRIS.
+    """
+
+    # Select relevant variables
+    df_shopping = df_shopping_raw.loc[:,('IRIS', 'LIBELLE_REGROUPEMENT_8_POSTES', 'SURFACE', 'geometry')]
+
+    # Map quantifiable values to different surfaces
+    surface_dict = {'moins de 300 m²':1, 'de 300 à 1.000 m²':2, '1.000 m² ou plus':3}
+    df_shopping['surface_code'] = df_shopping['SURFACE'].map(surface_dict)
+
+    # Filter out vacant shops
+    df_shopping = df_shopping[df_shopping['LIBELLE_REGROUPEMENT_8_POSTES'] != 'Local vacant']
+
+    # Identify the IRIS of each shop
+    df_shopping = df_shopping.sjoin(df_iris.loc[:, ["geometry"]], how="inner")
+
+    # Group by IRIS (weighted by shop size categories)
+    df_shopping = df_shopping.groupby("index_right")[["surface_code"]].sum()
+    df_shopping.index.rename("iris", inplace=True)
+    df_shopping.rename(columns={'surface_code':'shops_weighted'}, inplace=True)
+
+    return df_shopping
 
 def strip(sep, name):
     """Remove substring behind a separator.
@@ -149,6 +221,7 @@ def clean_museum_data(df_museum_raw):
     gdf_museum = gdf_museum.reset_index(drop=True)
 
     return gdf_museum
+
 
 def get_metro_rer_passengers_per_iris(df_metro_raw: pd.DataFrame, df_iris: gpd.GeoDataFrame) -> pd.DataFrame:
     """Compute number of metro and RER passengers per IRIS.

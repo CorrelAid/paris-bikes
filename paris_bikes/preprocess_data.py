@@ -267,3 +267,49 @@ def get_metro_rer_passengers_per_iris(df_metro_raw: pd.DataFrame, df_iris: gpd.G
     df_metro.index.rename("iris", inplace=True)
 
     return df_metro
+
+
+def get_train_passengers_per_iris(df_train_raw: pd.DataFrame, df_iris: gpd.GeoDataFrame) -> pd.DataFrame:
+    """Compute number of train passengers per IRIS.
+
+    Args:
+        df_train_raw (pd.DataFrame): Raw data with number of train passengers per station
+        df_iris (gpd.GeoDataFrame): Raw data with location of all IRIS within the city.
+
+    Returns:
+        pd.DataFrame: Number of train passengers per IRIS.
+    """
+    # Clean train data
+    # Get the most recent column with number of passengers
+    nb_passengers_col = sorted([col for col in df_train_raw.columns if col.startswith("Total Voyageurs 2")], reverse=True)[0]
+
+    # Include only stations in Paris (postal code starts with 75)
+    # Include only relevant columns
+    df_train = (
+        df_train_raw
+        .loc[
+            df_train_raw["Code postal"].astype(str).str.startswith("75"),
+            ["Nom de la gare", nb_passengers_col]
+        ]
+        .rename(columns={"Nom de la gare": "station", nb_passengers_col: "nb_train_passengers"})
+        .copy()
+    )
+
+    # Add string ", station" to every station name, to avoid confusions with stations names that are too general
+    # E.g. "Hotel de Ville" (city hall) exists in every city
+    df_train["station_city"] = df_train["station"] + ", paris"
+
+    # Geocode station names
+    df_train = (
+        geocode_from_location_name(df_train, "station_city")
+        .drop(columns="station_city")
+    )
+
+    # Identify the IRIS of each station
+    df_train = df_train.sjoin(df_iris.loc[:, ["geometry"]], how="inner")
+
+    # Get the total number of metro passengers per IRIS
+    df_train = df_train.groupby("index_right")[["nb_train_passengers"]].sum()
+    df_train.index.rename("iris", inplace=True)
+
+    return df_train

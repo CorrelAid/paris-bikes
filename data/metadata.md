@@ -40,7 +40,7 @@ Notes:
 
 - Not all parks are present (e.g. Tuileries, Luxembourg, Plantes, ...)
 
-## Metro stations
+## Metro and RER stations
 
 Filepath: data/raw/trafic-annuel-entrant-par-station-du-reseau-ferre-2021.csv
 

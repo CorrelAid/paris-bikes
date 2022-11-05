@@ -150,8 +150,8 @@ def clean_museum_data(df_museum_raw):
 
     return gdf_museum
 
-def get_metro_passengers_per_iris(df_metro_raw: pd.DataFrame, df_iris: gpd.GeoDataFrame) -> pd.DataFrame:
-    """Compute number of metro passengers per IRIS.
+def get_metro_rer_passengers_per_iris(df_metro_raw: pd.DataFrame, df_iris: gpd.GeoDataFrame) -> pd.DataFrame:
+    """Compute number of metro and RER passengers per IRIS.
 
     Args:
         df_metro_raw (pd.DataFrame): Raw data with number of metro passengers per station
@@ -161,13 +161,11 @@ def get_metro_passengers_per_iris(df_metro_raw: pd.DataFrame, df_iris: gpd.GeoDa
         pd.DataFrame: Number of metro passengers per IRIS.
     """
     # Clean metro data
-    # Include only Métro stations (assuming that RER are counted on the train dataset)
     # Include only stations in Paris
     # Include only relevant columns
     df_metro = (
         df_metro_raw
         .loc[
-            df_metro_raw["Réseau"].isin(["Métro"]) &
             df_metro_raw["Ville"].isin(["Paris"]),
             ["Station", "Trafic"]
         ]
@@ -188,9 +186,9 @@ def get_metro_passengers_per_iris(df_metro_raw: pd.DataFrame, df_iris: gpd.GeoDa
         .drop(columns="station_city")
     )
 
-    # TODO this could also be refactored into a separate function, since it's already used in other functions
     # Identify the IRIS of each station
     df_metro = df_metro.sjoin(df_iris.loc[:, ["geometry"]], how="inner")
+
     # Get the total number of metro passengers per IRIS
     df_metro = df_metro.groupby("index_right")[["nb_metro_passengers"]].sum()
     df_metro.index.rename("iris", inplace=True)

@@ -1,0 +1,4 @@
+outs:
+- md5: 8ede16441d0c5d0f0d84d74da80e26b4
+  size: 919
+  path: museums.csv

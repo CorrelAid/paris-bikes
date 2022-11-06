@@ -46,6 +46,16 @@ Filepath: data/raw/trafic-annuel-entrant-par-station-du-reseau-ferre-2021.csv
 
 Source: https://data.ratp.fr/explore/dataset/trafic-annuel-entrant-par-station-du-reseau-ferre-2021/information/
 
+Metadata: N/A
+
 Notes:
 
 - Only includes entries in the station, but not exchanges between lines
+
+## Train stations
+
+Filepath: data/raw/frequentation-gares.csv
+
+Source: https://ressources.data.sncf.com/explore/dataset/frequentation-gares/information/
+
+Metadata: https://ressources.data.sncf.com/explore/dataset/frequentation-gares/information/

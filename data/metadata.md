@@ -59,3 +59,28 @@ Filepath: data/raw/frequentation-gares.csv
 Source: https://ressources.data.sncf.com/explore/dataset/frequentation-gares/information/
 
 Metadata: https://ressources.data.sncf.com/explore/dataset/frequentation-gares/information/
+
+## Museums
+
+Filepath: data/raw/frequentation-des-musees-de-france.csv
+
+Source: https://data.culture.gouv.fr/explore/dataset/frequentation-des-musees-de-france/table/?sort=annee&q=ville%3D%22PARIS%22
+
+Metadata: https://data.culture.gouv.fr/explore/dataset/frequentation-des-musees-de-france/information/?sort=annee&q=ville%3D%22PARIS%22
+
+Notes:
+
+- Total visitors per year of state museums ("Musée de France")
+
+# île de France Mobilité parking (in train stations)
+
+Filepath: data/raw/parking-velos-ile-de-france-mobilites.csv
+
+Source: https://prim.iledefrance-mobilites.fr/fr/donnees-statiques/parking-velos-ile-de-france-mobilites
+
+Metadata: https://prim.iledefrance-mobilites.fr/fr/donnees-statiques/parking-velos-ile-de-france-mobilites
+
+Notes:
+
+- Parking spots in train stations by Île de France Mobilité
+- Includes closed/secure parking accessible with local transport pass/pass Navigo (type="consigne"), as well as open parking (type="abri")

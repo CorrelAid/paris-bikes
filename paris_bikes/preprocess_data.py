@@ -29,6 +29,7 @@ def get_parkings_per_iris(df_parking_raw: gpd.GeoDataFrame, df_iris: gpd.GeoData
 
     return pd.DataFrame(df_parks_per_iris)
 
+
 def get_population_per_iris(df_iris_raw: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     """Get the population per IRIS.
 
@@ -88,6 +89,7 @@ def get_school_capacity_per_iris(df_school_raw: gpd.GeoDataFrame, df_iris: gpd.G
 
     return df_schools
 
+
 def get_shops_per_iris(df_shopping_raw: gpd.GeoDataFrame, df_iris: gpd.GeoDataFrame) -> pd.DataFrame:
     """Compute number of businesses per IRIS (weighed by shop size).
 
@@ -119,6 +121,7 @@ def get_shops_per_iris(df_shopping_raw: gpd.GeoDataFrame, df_iris: gpd.GeoDataFr
 
     return df_shopping
 
+
 def strip(sep, name):
     """Remove substring behind a separator.
 
@@ -136,6 +139,7 @@ def strip(sep, name):
         return stripped
     except:
         return None
+
 
 def my_geocoder(row, column, geolocator):
     """Return geocode for a string.
@@ -155,6 +159,7 @@ def my_geocoder(row, column, geolocator):
         return row
     except:
         return None
+
 
 def geocode_from_location_name(df_in: pd.DataFrame, location_name_column):
     """Geocode locations based on a column with names of the locations.
@@ -176,6 +181,7 @@ def geocode_from_location_name(df_in: pd.DataFrame, location_name_column):
     gdf = gdf.drop(["longitude", "latitude"], axis=1)
 
     return gdf
+
 
 def clean_museum_data(df_museum_raw):
     """Geocoding and cleaning museum frequentation data.
@@ -215,12 +221,30 @@ def clean_museum_data(df_museum_raw):
 
     # prepare cleaned dataframe (select and rename columns, add "type" column, fix datatypes, reset index)
     gdf['type'] = "museum"
-    gdf_museum = gdf[["name", "type", "TOTAL","Année","longitude", "latitude"]].rename({'TOTAL':'visitors','Année':'year'}, axis=1)
+    gdf_museum = gdf[["name", "type", "TOTAL","Année","geometry"]].rename({'TOTAL':'visitors','Année':'year'}, axis=1)
 
     gdf_museum[['visitors','year']] = gdf_museum[['visitors','year']].astype('Int64')
     gdf_museum = gdf_museum.reset_index(drop=True)
 
     return gdf_museum
+
+
+def get_museum_visitors_per_iris(df_museums_clean: gpd.GeoDataFrame, df_iris: gpd.GeoDataFrame) -> pd.DataFrame:
+    """Compute yearly museum visitors per IRIS.
+    Args:
+        df_museums_clean (gpd.GeoDataFrame): Cleaned data with location and number of visitors in national museums per year.
+        df_iris (gpd.GeoDataFrame): Raw data with location of all IRIS within the city.
+    Returns:
+        pd.DataFrame: Number of yearly museum visitors per IRIS.
+    """
+    # Identify the IRIS of each museum
+    df_museums = df_museums_clean.sjoin(df_iris.loc[:, ["geometry"]], how="inner")
+
+    # Get the total number of yearly visitors per IRIS
+    df_museums = df_museums.groupby("index_right")[["visitors"]].sum()
+    df_museums.index.rename("iris", inplace=True)
+
+    return df_museums
 
 
 def get_metro_rer_passengers_per_iris(df_metro_raw: pd.DataFrame, df_iris: gpd.GeoDataFrame) -> pd.DataFrame:
@@ -313,3 +337,33 @@ def get_train_passengers_per_iris(df_train_raw: pd.DataFrame, df_iris: gpd.GeoDa
     df_train.index.rename("iris", inplace=True)
 
     return df_train
+
+
+def get_idfm_parkings_per_iris(df_idfm_raw: gpd.GeoDataFrame, df_iris: gpd.GeoDataFrame) -> pd.DataFrame:
+    """Compute Île de France Mobilité parking spots (in train stations) per IRIS.
+    Args:
+        df_idfm_raw (gpd.GeoDataFrame): Raw data with location and number of parking spots in IDFM parking facilities.
+        df_iris (gpd.GeoDataFrame): Raw data with location of all IRIS within the city.
+    Returns:
+        pd.DataFrame: Number of IDFM parking spots per IRIS.
+    """
+    # Select relevant variables and rename them
+    df_idfm = df_idfm_raw[['zdcname', 'type', 'num_docks_available', 'insee_code', 'geometry']]
+    df_idfm = df_idfm.rename(
+        columns={
+            "zdcname": "name",
+            "num_docks_available": "nb_parking_spots"
+        }
+    )
+
+    # Filter only IRIS in Paris
+    df_idfm = df_idfm[df_idfm['insee_code'].between(75000, 75999)]
+
+    # Identify the IRIS of each parking facility
+    df_idfm = df_idfm.sjoin(df_iris.loc[:, ["geometry"]], how="inner")
+
+    # Get the total number of parking spots per IRIS
+    df_idfm = df_idfm.groupby("index_right")[["nb_parking_spots"]].sum()
+    df_idfm.index.rename("iris", inplace=True)
+
+    return df_idfm

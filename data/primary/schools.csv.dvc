@@ -1,0 +1,4 @@
+outs:
+- md5: d23483d38175a9290cc5fd87c5614172
+  size: 12542
+  path: schools.csv

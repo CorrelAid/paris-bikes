@@ -72,7 +72,7 @@ Notes:
 
 - Total visitors per year of state museums ("Musée de France")
 
-# île de France Mobilité parking (in train stations)
+## île de France Mobilité parking (in train stations)
 
 Filepath: data/raw/parking-velos-ile-de-france-mobilites.csv
 
@@ -84,3 +84,17 @@ Notes:
 
 - Parking spots in train stations by Île de France Mobilité
 - Includes closed/secure parking accessible with local transport pass/pass Navigo (type="consigne"), as well as open parking (type="abri")
+
+## Schools
+
+Filepath: data/raw/EQUIPEMENT_PONCTUEL_ENSEIGNEMENT_EDUCATION.geojson
+
+Source: https://opendata.apur.org/datasets/Apur::equipement-ponctuel-enseignement-education/about
+
+## Shops
+
+Filepath: data/raw/BDCOM_2020.geojson
+
+Source: https://opendata.apur.org/datasets/Apur::bdcom-2020-1/about
+
+Metadata: https://geocatalogue.apur.org/catalogue/srv/fre/catalog.search#/metadata/4dab9088-f018-4379-83ec-1b0383b7435a

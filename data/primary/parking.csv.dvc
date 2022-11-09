@@ -1,0 +1,4 @@
+outs:
+- md5: 952ab1995aa7e3a54d6d107f6faa0247
+  size: 16995
+  path: parking.csv

@@ -1,0 +1,4 @@
+outs:
+- md5: 7cc05c5a05e24078bd89611bcbc074ca
+  size: 17017
+  path: shops.csv

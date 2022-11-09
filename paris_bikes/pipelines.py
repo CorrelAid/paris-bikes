@@ -1,25 +1,20 @@
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Union
 
 import geopandas as gpd
 import pandas as pd
 
-from paris_bikes.preprocess_data import (
-    clean_museum_data,
-    get_idfm_parkings_per_iris,
-    get_metro_rer_passengers_per_iris,
-    get_museum_visitors_per_iris,
-    get_parkings_per_iris,
-    get_population_per_iris,
-    get_school_capacity_per_iris,
-    get_shops_per_iris,
-    get_train_passengers_per_iris,
-)
+from paris_bikes.preprocess_data import *
 from paris_bikes.utils import get_data_root
 
 
-def primary_pipeline() -> Dict[str, pd.DataFrame]:
-    """Generate the primary datasets from the raw datasets."""
+def primary_pipeline() -> Dict[str, Union[pd.DataFrame, gpd.GeoDataFrame]]:
+    """Generate and save the primary datasets from the raw datasets.
+
+    Returns:
+        Dict[str, Union[pd.DataFrame, gpd.GeoDataFrame]]: Dictionary with
+            primary datasets.
+    """
     # Define location of the raw data
     raw_root_filepath = get_data_root() / "raw"
     raw_census_filepath = raw_root_filepath / "RECENSEMENT_IRIS_POPULATION.geojson"
@@ -40,6 +35,7 @@ def primary_pipeline() -> Dict[str, pd.DataFrame]:
     )
 
     # Read the raw data
+    print("Reading raw data.")
     df_raw_census = gpd.read_file(raw_census_filepath)
     df_raw_parking = gpd.read_file(raw_parking_filepath)
     df_raw_parking_idfm = pd.read_csv(raw_parking_idfm_filepath, delimiter=";")
@@ -50,6 +46,7 @@ def primary_pipeline() -> Dict[str, pd.DataFrame]:
     df_raw_schools = gpd.read_file(raw_schools_filepath)
 
     # Transform raw data into primary data
+    print("Transforming raw data into primary data.")
     df_iris = get_population_per_iris(df_raw_census)
     df_parking = get_parkings_per_iris(df_raw_parking, df_iris)
     df_parking_idfm = get_idfm_parkings_per_iris(df_raw_parking_idfm, df_iris)
@@ -61,6 +58,7 @@ def primary_pipeline() -> Dict[str, pd.DataFrame]:
     df_schools = get_school_capacity_per_iris(df_raw_schools, df_iris)
 
     # Save primary data
+    print("Saving primary data.")
     primary_root_filepath = get_data_root() / "primary"
     primary_datasets = {
         "iris": df_iris,

@@ -215,6 +215,8 @@ def geocode_from_location_name(df_in: pd.DataFrame, location_name_column):
 def clean_museum_data(df_museum_raw):
     """Geocoding and cleaning museum frequentation data.
 
+    TODO Geocoding is working for Kati but not for Joao. Could not figure out why.
+
     Args:
         df (pd.Dataframe): Raw data with frequentation of national museums in Paris in years 2019 and 2020.
 

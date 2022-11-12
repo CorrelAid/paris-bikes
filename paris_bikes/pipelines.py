@@ -1,3 +1,4 @@
+from functools import reduce
 from pathlib import Path
 from typing import Dict, Union
 
@@ -50,12 +51,12 @@ def primary_pipeline() -> Dict[str, Union[pd.DataFrame, gpd.GeoDataFrame]]:
     df_iris = get_population_per_iris(df_raw_census)
     df_parking = get_parkings_per_iris(df_raw_parking, df_iris)
     df_parking_idfm = get_idfm_parkings_per_iris(df_raw_parking_idfm, df_iris)
-    df_museum_clean = clean_museum_data(df_raw_museum)
-    df_museum = get_museum_visitors_per_iris(df_museum_clean, df_iris)
-    df_metro = get_metro_rer_passengers_per_iris(df_raw_metro, df_iris)
-    df_train = get_train_passengers_per_iris(df_raw_train, df_iris)
-    df_shops = get_shops_per_iris(df_raw_shops, df_iris)
-    df_schools = get_school_capacity_per_iris(df_raw_schools, df_iris)
+    # df_museum_clean = clean_museum_data(df_raw_museum)
+    # df_museum = get_museum_visitors_per_iris(df_museum_clean, df_iris)
+    # df_metro = get_metro_rer_passengers_per_iris(df_raw_metro, df_iris)
+    # df_train = get_train_passengers_per_iris(df_raw_train, df_iris)
+    # df_shops = get_shops_per_iris(df_raw_shops, df_iris)
+    # df_schools = get_school_capacity_per_iris(df_raw_schools, df_iris)
 
     # Save primary data
     print("Saving primary data.")
@@ -64,11 +65,11 @@ def primary_pipeline() -> Dict[str, Union[pd.DataFrame, gpd.GeoDataFrame]]:
         "iris": df_iris,
         "parking": df_parking,
         "parking_idfm": df_parking_idfm,
-        "museum": df_museum,
-        "metro": df_metro,
-        "train": df_train,
-        "shops": df_shops,
-        "schools": df_schools,
+        # "museum": df_museum,
+        # "metro": df_metro,
+        # "train": df_train,
+        # "shops": df_shops,
+        # "schools": df_schools,
     }
     for df_name, df in primary_datasets.items():
         if isinstance(df, gpd.GeoDataFrame):
@@ -83,3 +84,49 @@ def primary_pipeline() -> Dict[str, Union[pd.DataFrame, gpd.GeoDataFrame]]:
     print("Don't forget to push your changes to dvc with `dvc push`.")
 
     return primary_datasets
+
+
+def feature_pipeline(
+    primary_datasets: Dict[str, Union[pd.DataFrame, gpd.GeoDataFrame]] = {}
+) -> gpd.GeoDataFrame:
+    """Create and save the feature table from the primary datasets.
+
+    The feature table is a merge between all the primary datasets, and it
+    includes the geometry of each IRIS.
+
+    Args:
+        primary_datasets
+        (Dict[str, Union[pd.DataFrame, gpd.GeoDataFrame]], optional):
+            Dictionary of primary datasets.
+            It is the output of primary_pipeline. Defaults to {}.
+
+    Returns:
+        gpd.GeoDataFrame: Feature table.
+    """
+    # Load primary datasets if not passed as argument
+    if primary_datasets == {}:
+        primary_root_filepath = get_data_root() / "primary"
+        primary_datasets = [
+            gpd.read_file(primary_root_filepath / "iris.geojson"),
+            pd.read_csv(primary_root_filepath / "parking.csv"),
+            pd.read_csv(primary_root_filepath / "parking_idfm.csv"),
+            pd.read_csv(primary_root_filepath / "museums.csv"),
+            pd.read_csv(primary_root_filepath / "metro_rer.csv"),
+            pd.read_csv(primary_root_filepath / "trains.csv"),
+            pd.read_csv(primary_root_filepath / "shops.csv"),
+            pd.read_csv(primary_root_filepath / "schools.csv"),
+        ]
+        for idx, _ in enumerate(primary_datasets):
+            primary_datasets[idx] = primary_datasets[idx].set_index("iris")
+    else:
+        primary_datasets = primary_datasets.values()
+
+    df_feature = reduce(
+        lambda x, y: x.merge(y, how="outer", left_index=True, right_index=True),
+        primary_datasets,
+    )
+
+    feature_root_filepath = get_data_root() / "feature"
+    df_feature.to_file(feature_root_filepath / "feature.geojson", driver="GeoJSON")
+
+    return df_feature

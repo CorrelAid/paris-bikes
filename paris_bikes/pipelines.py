@@ -51,12 +51,12 @@ def primary_pipeline() -> Dict[str, Union[pd.DataFrame, gpd.GeoDataFrame]]:
     df_iris = get_population_per_iris(df_raw_census)
     df_parking = get_parkings_per_iris(df_raw_parking, df_iris)
     df_parking_idfm = get_idfm_parkings_per_iris(df_raw_parking_idfm, df_iris)
-    # df_museum_clean = clean_museum_data(df_raw_museum)
-    # df_museum = get_museum_visitors_per_iris(df_museum_clean, df_iris)
-    # df_metro = get_metro_rer_passengers_per_iris(df_raw_metro, df_iris)
-    # df_train = get_train_passengers_per_iris(df_raw_train, df_iris)
-    # df_shops = get_shops_per_iris(df_raw_shops, df_iris)
-    # df_schools = get_school_capacity_per_iris(df_raw_schools, df_iris)
+    df_museum_clean = clean_museum_data(df_raw_museum)
+    df_museum = get_museum_visitors_per_iris(df_museum_clean, df_iris)
+    df_metro = get_metro_rer_passengers_per_iris(df_raw_metro, df_iris)
+    df_train = get_train_passengers_per_iris(df_raw_train, df_iris)
+    df_shops = get_shops_per_iris(df_raw_shops, df_iris)
+    df_schools = get_school_capacity_per_iris(df_raw_schools, df_iris)
 
     # Save primary data
     print("Saving primary data.")
@@ -65,11 +65,11 @@ def primary_pipeline() -> Dict[str, Union[pd.DataFrame, gpd.GeoDataFrame]]:
         "iris": df_iris,
         "parking": df_parking,
         "parking_idfm": df_parking_idfm,
-        # "museum": df_museum,
-        # "metro": df_metro,
-        # "train": df_train,
-        # "shops": df_shops,
-        # "schools": df_schools,
+        "museum": df_museum,
+        "metro": df_metro,
+        "train": df_train,
+        "shops": df_shops,
+        "schools": df_schools,
     }
     for df_name, df in primary_datasets.items():
         if isinstance(df, gpd.GeoDataFrame):

@@ -46,8 +46,7 @@ DVC is setup to store our data repository on our project's Google Drive (folder 
 
 DVC is easy to use and follows a syntax similar to git.
 
-
-**To install DVC:** 
+**To install DVC:**
 
 DVC is already installed if you followed the [Environment](#environment) setup.
 If necessary, check [here](https://dvc.org/doc/install) for other installation methods.
@@ -85,7 +84,7 @@ How do we know that we're really done with a task and have not forgotten anythin
 
 - **Functionality**: the code runs / has no defects
 - **Code documentation**: the code itself is properly documented
-- **Data documentation**: e.g. data source, link to metadata
+- **Data documentation**: metadata of raw files should be documented in `data/metadata.md`
 - **Project documentation** such as README/wiki is updated where necessary
     - scope/features of project: what does this project do? How can you run it?
     - setup of project
@@ -95,11 +94,10 @@ How do we know that we're really done with a task and have not forgotten anythin
 - **Peer Review**: someone else has had a look at the code and tested it on their machine
 - **Git**: the code is ready to be merged to the main branch or is already on the main branch
 - **Clean Repository**: old, outdated code and files are deleted
-- **Consistent code style**: code is styled consistently
+- **Consistent code style**: code is styled consistently and linted using `black`
 - **Unit tests**
     - existing unit tests pass
-    - if possible: new code is properly tested 
-    - unit test coverage >xx% 
-- **Standards**: no errors on coding standards (e.g. lintr, black)
+    - if possible: new code is properly tested
+    - unit test coverage >xx%
 
 See [here](https://github.com/CorrelAid/definition-of-done) for more details.

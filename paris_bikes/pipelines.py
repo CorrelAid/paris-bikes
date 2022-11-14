@@ -1,3 +1,4 @@
+from functools import reduce
 from pathlib import Path
 from typing import Dict, Union
 
@@ -83,3 +84,49 @@ def primary_pipeline() -> Dict[str, Union[pd.DataFrame, gpd.GeoDataFrame]]:
     print("Don't forget to push your changes to dvc with `dvc push`.")
 
     return primary_datasets
+
+
+def feature_pipeline(
+    primary_datasets: Dict[str, Union[pd.DataFrame, gpd.GeoDataFrame]] = {}
+) -> gpd.GeoDataFrame:
+    """Create and save the feature table from the primary datasets.
+
+    The feature table is a merge between all the primary datasets, and it
+    includes the geometry of each IRIS.
+
+    Args:
+        primary_datasets
+        (Dict[str, Union[pd.DataFrame, gpd.GeoDataFrame]], optional):
+            Dictionary of primary datasets.
+            It is the output of primary_pipeline. Defaults to {}.
+
+    Returns:
+        gpd.GeoDataFrame: Feature table.
+    """
+    # Load primary datasets if not passed as argument
+    if primary_datasets == {}:
+        primary_root_filepath = get_data_root() / "primary"
+        primary_datasets = [
+            gpd.read_file(primary_root_filepath / "iris.geojson"),
+            pd.read_csv(primary_root_filepath / "parking.csv"),
+            pd.read_csv(primary_root_filepath / "parking_idfm.csv"),
+            pd.read_csv(primary_root_filepath / "museums.csv"),
+            pd.read_csv(primary_root_filepath / "metro_rer.csv"),
+            pd.read_csv(primary_root_filepath / "trains.csv"),
+            pd.read_csv(primary_root_filepath / "shops.csv"),
+            pd.read_csv(primary_root_filepath / "schools.csv"),
+        ]
+        for idx, _ in enumerate(primary_datasets):
+            primary_datasets[idx] = primary_datasets[idx].set_index("iris")
+    else:
+        primary_datasets = primary_datasets.values()
+
+    df_feature = reduce(
+        lambda x, y: x.merge(y, how="outer", left_index=True, right_index=True),
+        primary_datasets,
+    )
+
+    feature_root_filepath = get_data_root() / "feature"
+    df_feature.to_file(feature_root_filepath / "feature.geojson", driver="GeoJSON")
+
+    return df_feature

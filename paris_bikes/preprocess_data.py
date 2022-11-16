@@ -45,8 +45,11 @@ def get_population_per_iris(df_iris_raw: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     Returns:
         gpd.GeoDataFrame: Population per IRIS.
     """
+    # Include only IRIS inside the city of Paris
     df_iris = (
-        df_iris_raw.loc[:, ["l_ir", "nb_pop", "geometry"]]
+        df_iris_raw.loc[
+            df_iris_raw.l_epci == "T1 Paris", ["l_ir", "nb_pop", "geometry"]
+        ]
         .copy()
         .rename(columns={"l_ir": "iris"})
         .set_index("iris")
@@ -404,9 +407,11 @@ def get_idfm_parkings_per_iris(
     df_idfm_raw: pd.DataFrame, df_iris: gpd.GeoDataFrame
 ) -> pd.DataFrame:
     """Compute Île de France Mobilité parking spots (in train stations) per IRIS.
+
     Args:
         df_idfm_raw (pd.DataFrame): Raw data with location and number of parking spots in IDFM parking facilities.
         df_iris (gpd.GeoDataFrame): Raw data with location of all IRIS within the city.
+
     Returns:
         pd.DataFrame: Number of IDFM parking spots per IRIS.
     """
@@ -422,7 +427,7 @@ def get_idfm_parkings_per_iris(
         ["zdcname", "type", "num_docks_available", "insee_code", "geometry"]
     ]
     df_idfm = df_idfm.rename(
-        columns={"zdcname": "name", "num_docks_available": "nb_parking_spots"}
+        columns={"zdcname": "name", "num_docks_available": "nb_parking_spots_idfm"}
     )
 
     # Filter only IRIS in Paris
@@ -432,7 +437,7 @@ def get_idfm_parkings_per_iris(
     df_idfm = df_idfm.sjoin(df_iris.loc[:, ["geometry"]], how="inner")
 
     # Get the total number of parking spots per IRIS
-    df_idfm = df_idfm.groupby("index_right")[["nb_parking_spots"]].sum()
+    df_idfm = df_idfm.groupby("index_right")[["nb_parking_spots_idfm"]].sum()
     df_idfm.index.rename("iris", inplace=True)
 
     return df_idfm

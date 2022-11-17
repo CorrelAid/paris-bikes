@@ -15,7 +15,6 @@ server = application.server
 application.layout = html.Div(
     children=[
         dcc.Location(id="url", refresh=False),
-        # nav,
         html.H1(children="Paris Bikes"),
         html.Br(),
         dcc.RadioItems(df.columns.drop("geometry"), "nb_pop", id="plot-column-input"),

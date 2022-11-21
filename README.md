@@ -1,6 +1,6 @@
-# paris-bikes
+# Where to build new bike parking spots in Paris?
 
-Repository of the CorreAid project `paris-bikes` for the City of Paris.
+*This is the repository of the CorreAid project `paris-bikes` for the City of Paris.*
 
 TODO project description
 
@@ -8,17 +8,18 @@ TODO project goals
 
 TODO stakeholder list
 
-## Useful links
+## We thank
+<p float="left">
+    <img src="img/Ville_de_Paris_Logo.png" width="150">
+    <img src="img/CorrelAid_Logo.png" width="300">
+    <img src="img/LPI_Logo.png" width="200"> 
+</p>
 
-- [Google Drive](https://drive.google.com/drive/folders/1mmsON23Bz-7xB3Y3qGHC0kqSKG6aXUVr)
-- [Slack channel](https://correlaid.slack.com/archives/C03NAN24GDN)
-- [Planning Mural](https://app.mural.co/t/correlaid9916/m/correlaid9916/1657610032235/e86d4422b5be6421cd132e9c47a3eb82f0d191f3)
-- [Team Manifesto Mural](https://app.mural.co/t/correlaid9916/m/correlaid9916/1657265397906/558401920c32987ce75a2853aaea0e06aa6e94e2)
-- [CorrelAid docs](https://docs.correlaid.org/)
+# Project setup -- for developers
 
 ## Dash application
 
-TODO add some context in the project description about the dash app
+The is the web app of the Parking Demand Index. It is an interactive map, which allows you to select and combine different metrics to calculate and visualize parking demand for IRIS sectors in Paris. 
 
 To start the Dash application server locally, from the root of this repo, execute:
 
@@ -28,9 +29,7 @@ python paris_bikes/dash_application.py
 
 and navigate to http://localhost:5000 in your browser.
 
-## Project setup
-
-### Development environment
+## Development environment
 
 We use `python>=3.10` and [`poetry`](https://python-poetry.org/docs/basic-usage/) to manage our development environment.
 `poetry` manages dependencies and makes it easy to create a virtual environment that is compatible with our package.
@@ -51,7 +50,7 @@ To activate the virtual environment:
 poetry shell
 ```
 
-### Data management
+## Data management
 
 We use [DVC](https://dvc.org/) for data management and version control.
 DVC is setup to store our data repository on our project's Google Drive (folder name `dvcstore`).
@@ -89,6 +88,16 @@ dvc checkout
 ```
 
 A quick starting guide can be found [here](https://dvc.org/doc/start/data-management).
+
+# Project management
+
+## Useful links
+
+- [Google Drive](https://drive.google.com/drive/folders/1mmsON23Bz-7xB3Y3qGHC0kqSKG6aXUVr)
+- [Slack channel](https://correlaid.slack.com/archives/C03NAN24GDN)
+- [Planning Mural](https://app.mural.co/t/correlaid9916/m/correlaid9916/1657610032235/e86d4422b5be6421cd132e9c47a3eb82f0d191f3)
+- [Team Manifesto Mural](https://app.mural.co/t/correlaid9916/m/correlaid9916/1657265397906/558401920c32987ce75a2853aaea0e06aa6e94e2)
+- [CorrelAid docs](https://docs.correlaid.org/)
 
 ## Definition of Done
 

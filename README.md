@@ -16,6 +16,18 @@ TODO stakeholder list
 - [Team Manifesto Mural](https://app.mural.co/t/correlaid9916/m/correlaid9916/1657265397906/558401920c32987ce75a2853aaea0e06aa6e94e2)
 - [CorrelAid docs](https://docs.correlaid.org/)
 
+## Dash application
+
+TODO add some context in the project description about the dash app
+
+To start the Dash application server locally, from the root of this repo, execute:
+
+```
+python paris_bikes/dash_application.py
+```
+
+and navigate to http://localhost:5000 in your browser.
+
 ## Project setup
 
 ### Development environment

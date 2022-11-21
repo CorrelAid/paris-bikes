@@ -9,13 +9,13 @@ TODO project goals
 TODO stakeholder list
 
 ## We thank
-<p float="left">
+<p>
     <img src="img/Ville_de_Paris_Logo.png" width="100">
-    <img src="img/CorrelAid_Logo.png" width="100" style="margin-left:20px">
     <img src="img/LPI_Logo.png" width="130"> 
+    <img src="img/CorrelAid_Logo.png" width="130" style="margin-left:20px">
 </p>
 
-# Project setup -- for developers
+# Project setup - for developers
 
 ## Dash application
 

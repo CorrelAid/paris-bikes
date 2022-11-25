@@ -1,5 +1,5 @@
 import geopandas as gpd
-from dash import Dash, Input, Output, dcc, html
+from dash import Dash, Input, Output, State, dcc, html
 
 from paris_bikes.mapping import create_map
 from paris_bikes.utils import get_data_root
@@ -12,7 +12,11 @@ df["nb_parking_spots"] += df["nb_parking_spots_idfm"].fillna(0)
 df.drop(columns=["nb_parking_spots_idfm"], inplace=True)
 # Impute missing values with 0
 df.fillna(0, inplace=True)
-# df.loc[:, df.columns.drop("geometry")] = df.loc[:, df.columns.drop("geometry")].divide(df["nb_parking_spots"], axis=0)
+# Create normalized columns
+# Note: adding +1 to the denominator to avoid dividing by 0
+df = df.assign(
+    **{(col + "_normalized"): (df.loc[:, col] / (df["nb_parking_spots"] + 1)) for col in df.columns.drop("geometry")}
+)
 
 # Initialize the dash app
 application = Dash(__name__)
@@ -24,19 +28,55 @@ application.layout = html.Div(
         dcc.Location(id="url", refresh=False),
         html.H1(children="Paris Bikes"),
         html.Br(),
-        dcc.RadioItems(df.columns.drop(["geometry"]), "nb_pop", id="plot-column-input"),
+        dcc.RadioItems([], "nb_pop", id="plot-column-selector"),
+        html.Br(),
+        dcc.Checklist(["Normalize metrics by number of parking spots"], [], id="normalize-button"),
         html.Br(),
         dcc.Graph(id="map"),
     ]
 )
 
-# Link the plot-column-input with the map
+# Link the plot-column-selector with the output-map
 @application.callback(
     Output(component_id="map", component_property="figure"),
-    Input(component_id="plot-column-input", component_property="value"),
+    Input(component_id="plot-column-selector", component_property="value"),
 )
 def update_map(input_value):
     return create_map(df, input_value)
+
+
+# Link the normalize-button with the plot-column-selector
+@application.callback(
+    Output(component_id="plot-column-selector", component_property="options"),
+    Output(component_id="plot-column-selector", component_property="value"),
+    Input(component_id="normalize-button", component_property="value"),
+    State(component_id="plot-column-selector", component_property="value"),
+)
+def update_plot_column_selector(button_value, selector_value):
+    cols = df.columns.drop(["geometry"])
+    col_labels = [
+        "Population",
+        "Parking spots",
+        "Museum visitors",
+        "Metro passengers",
+        "Train passengers",
+        "Number of shops",
+        "School capacity",
+    ]
+    # If nothing is selected, use raw metrics
+    if len(button_value) == 0:
+        if "_normalized" in selector_value:
+            selector_value = selector_value.replace("_normalized", "")
+        cols = [col for col in cols if "_normalized" not in col]
+        options = [{"label": col_label, "value": col} for col_label, col in zip(col_labels, cols)]
+        return options, selector_value
+    # Otherwise, use normalized metrics
+    else:
+        if "_normalized" not in selector_value:
+            selector_value = selector_value + "_normalized"
+        cols = [col for col in cols if "_normalized" in col]
+        options = [{"label": col_label, "value": col} for col_label, col in zip(col_labels, cols)]
+        return options, selector_value
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 import geopandas as gpd
-from dash import Dash, Input, Output, dcc, html
+from dash import Dash, Input, Output, State, dcc, html
 
 from paris_bikes.mapping import create_map
 from paris_bikes.utils import get_data_root
@@ -28,9 +28,9 @@ application.layout = html.Div(
         dcc.Location(id="url", refresh=False),
         html.H1(children="Paris Bikes"),
         html.Br(),
-        dcc.RadioItems(df.columns.drop(["geometry"]), "nb_pop", id="plot-column-selector"),
+        dcc.RadioItems([], "nb_pop", id="plot-column-selector"),
         html.Br(),
-        dcc.Checklist(["Normalize metrics by number of parking spots"], id="normalize-button"),
+        dcc.Checklist(["Normalize metrics by number of parking spots"], [], id="normalize-button"),
         html.Br(),
         dcc.Graph(id="map"),
     ]
@@ -48,16 +48,22 @@ def update_map(input_value):
 # Link the normalize-button with the plot-column-selector
 @application.callback(
     Output(component_id="plot-column-selector", component_property="options"),
+    Output(component_id="plot-column-selector", component_property="value"),
     Input(component_id="normalize-button", component_property="value"),
+    State(component_id="plot-column-selector", component_property="value"),
 )
-def update_plot_column_selector(input_value):
+def update_plot_column_selector(button_value, selector_value):
     cols = df.columns.drop(["geometry"])
     # If nothing is selected, use raw metrics
-    if input_value is None:
-        return [col for col in cols if "_normalized" not in col]
+    if len(button_value) == 0:
+        if "_normalized" in selector_value:
+            selector_value = selector_value.replace("_normalized", "")
+        return [col for col in cols if "_normalized" not in col], selector_value
     # Otherwise, use normalized metrics
     else:
-        return [col for col in cols if "_normalized" in col]
+        if "_normalized" not in selector_value:
+            selector_value = selector_value + "_normalized"
+        return [col for col in cols if "_normalized" in col], selector_value
 
 
 if __name__ == "__main__":

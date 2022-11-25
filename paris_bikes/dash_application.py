@@ -12,7 +12,11 @@ df["nb_parking_spots"] += df["nb_parking_spots_idfm"].fillna(0)
 df.drop(columns=["nb_parking_spots_idfm"], inplace=True)
 # Impute missing values with 0
 df.fillna(0, inplace=True)
-# df.loc[:, df.columns.drop("geometry")] = df.loc[:, df.columns.drop("geometry")].divide(df["nb_parking_spots"], axis=0)
+# Create normalized columns
+# Note: adding +1 to the denominator to avoid dividing by 0
+df = df.assign(
+    **{(col + "_normalized"): (df.loc[:, col] / (df["nb_parking_spots"] + 1)) for col in df.columns.drop("geometry")}
+)
 
 # Initialize the dash app
 application = Dash(__name__)

@@ -54,16 +54,29 @@ def update_map(input_value):
 )
 def update_plot_column_selector(button_value, selector_value):
     cols = df.columns.drop(["geometry"])
+    col_labels = [
+        "Population",
+        "Parking spots",
+        "Museum visitors",
+        "Metro passengers",
+        "Train passengers",
+        "Number of shops",
+        "School capacity",
+    ]
     # If nothing is selected, use raw metrics
     if len(button_value) == 0:
         if "_normalized" in selector_value:
             selector_value = selector_value.replace("_normalized", "")
-        return [col for col in cols if "_normalized" not in col], selector_value
+        cols = [col for col in cols if "_normalized" not in col]
+        options = [{"label": col_label, "value": col} for col_label, col in zip(col_labels, cols)]
+        return options, selector_value
     # Otherwise, use normalized metrics
     else:
         if "_normalized" not in selector_value:
             selector_value = selector_value + "_normalized"
-        return [col for col in cols if "_normalized" in col], selector_value
+        cols = [col for col in cols if "_normalized" in col]
+        options = [{"label": col_label, "value": col} for col_label, col in zip(col_labels, cols)]
+        return options, selector_value
 
 
 if __name__ == "__main__":

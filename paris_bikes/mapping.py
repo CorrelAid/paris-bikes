@@ -1,7 +1,6 @@
 import geopandas as gpd
 import numpy as np
 import plotly.express as px
-import plotly.graph_objects as go
 
 
 def create_map(df: gpd.GeoDataFrame, var: str, width=600, height=400):

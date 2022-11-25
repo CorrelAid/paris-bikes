@@ -1,4 +1,5 @@
 import geopandas as gpd
+import numpy as np
 import plotly.express as px
 
 
@@ -21,6 +22,7 @@ def create_map(df: gpd.GeoDataFrame, var: str, width=600, height=400):
         color=var,
         width=width,
         height=height,
+        color_continuous_scale="RdBu_r",
     )
 
     # Zoom map

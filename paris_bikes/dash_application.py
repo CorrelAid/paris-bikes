@@ -20,7 +20,7 @@ df = df.assign(
 )
 
 # Initialize the dash app
-application = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+application = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP])
 server = application.server
 
 # Define the dash app layout
@@ -36,20 +36,32 @@ application.layout = dbc.Container(
         dbc.Row(
             [
                 dbc.Col(
-                    children=[
-                        dbc.RadioItems(options=[], value="nb_pop", id="plot-column-selector"),
-                        html.Br(),
-                        dbc.Checklist(
-                            options=[{"label": "Normalize metrics by number of parking spots", "value": 1}],
-                            value=[],
-                            id="normalize-button",
-                            switch=True,
-                        ),
+                    [
+                        dbc.Card(
+                            [
+                                dbc.CardBody(
+                                    [
+                                        html.H4(
+                                            [html.I(className="bi bi-bar-chart-line me-2"), "Metrics"],
+                                        ),
+                                        dbc.RadioItems(options=[], value="nb_pop", id="plot-column-selector"),
+                                    ]
+                                ),
+                                dbc.CardFooter(
+                                    dbc.Checklist(
+                                        options=[{"label": "Normalize metrics by number of parking spots", "value": 1}],
+                                        value=[],
+                                        id="normalize-button",
+                                        switch=True,
+                                    ),
+                                ),
+                            ],
+                        )
                     ],
                     width=3,
                 ),
                 dbc.Col(
-                    children=dcc.Graph(id="map"),
+                    dcc.Graph(id="map"),
                 ),
             ]
         ),

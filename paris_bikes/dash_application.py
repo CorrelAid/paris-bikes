@@ -92,7 +92,10 @@ application.layout = dbc.Container(
     Input(component_id="plot-column-selector", component_property="value"),
 )
 def update_map(input_value):
-    return create_map(df, input_value, width=None, height=None)
+    fig = create_map(df, input_value, width=None, height=None)
+    # Remove legend title
+    fig.update_layout(coloraxis_colorbar={"title": ""})
+    return fig
 
 
 # Link the normalize-button with the plot-column-selector

@@ -17,7 +17,7 @@ def create_map(df: gpd.GeoDataFrame, var: str, width=600, height=400):
     fig = px.choropleth_mapbox(
         df,
         geojson=df.geometry,
-        locations=df.index,
+        locations="iris",
         # projection="mercator",
         color=var,
         width=width,
@@ -27,6 +27,8 @@ def create_map(df: gpd.GeoDataFrame, var: str, width=600, height=400):
         center={"lat": 48.86, "lon": 2.34},
         zoom=11,
         mapbox_style="carto-positron",
+        hover_name="iris",
+        hover_data={"iris": False, "nb_parking_spots": True},
     )
 
     # Zoom map

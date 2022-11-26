@@ -33,6 +33,6 @@ def create_map(df: gpd.GeoDataFrame, var: str, width=600, height=400):
     fig.update_geos(fitbounds="locations", visible=True)
 
     # Enhance layout
-    fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
+    fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0}, uirevision="no reset")
 
     return fig

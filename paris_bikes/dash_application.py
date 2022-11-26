@@ -1,3 +1,4 @@
+import dash_bootstrap_components as dbc
 import geopandas as gpd
 from dash import Dash, Input, Output, State, dcc, html
 
@@ -19,20 +20,69 @@ df = df.assign(
 )
 
 # Initialize the dash app
-application = Dash(__name__)
+application = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP])
 server = application.server
 
 # Define the dash app layout
-application.layout = html.Div(
-    children=[
-        dcc.Location(id="url", refresh=False),
-        html.H1(children="Paris Bikes"),
-        html.Br(),
-        dcc.RadioItems([], "nb_pop", id="plot-column-selector"),
-        html.Br(),
-        dcc.Checklist(["Normalize metrics by number of parking spots"], [], id="normalize-button"),
-        html.Br(),
-        dcc.Graph(id="map"),
+application.layout = dbc.Container(
+    [
+        dbc.Row(
+            [
+                html.H1(children="Paris Bikes"),
+                html.Br(),
+            ]
+        ),
+        html.Hr(),
+        dbc.Row(
+            [
+                dbc.Col(
+                    [
+                        dbc.Card(
+                            [
+                                dbc.CardBody(
+                                    [
+                                        html.H4(
+                                            [html.I(className="bi bi-bar-chart-line me-2"), "Metrics"],
+                                        ),
+                                        dbc.RadioItems(options=[], value="nb_pop", id="plot-column-selector"),
+                                    ]
+                                ),
+                                dbc.CardFooter(
+                                    dbc.Checklist(
+                                        options=[{"label": "Normalize metrics by number of parking spots", "value": 1}],
+                                        value=[],
+                                        id="normalize-button",
+                                        switch=True,
+                                    ),
+                                ),
+                            ],
+                        )
+                    ],
+                    width=3,
+                ),
+                dbc.Col(
+                    dcc.Graph(id="map"),
+                ),
+            ]
+        ),
+        html.Hr(),
+        dbc.Row(
+            html.P(
+                [
+                    "This project was developed by ",
+                    html.A(
+                        "CorrelAid",
+                        href="https://correlaid.org/",
+                    ),
+                    " for the City of Paris. The source code can be found ",
+                    html.A(
+                        "on GitHub",
+                        href="https://github.com/CorrelAid/paris-bikes",
+                    ),
+                    ".",
+                ]
+            ),
+        ),
     ]
 )
 
@@ -42,7 +92,7 @@ application.layout = html.Div(
     Input(component_id="plot-column-selector", component_property="value"),
 )
 def update_map(input_value):
-    return create_map(df, input_value)
+    return create_map(df, input_value, width=None, height=None)
 
 
 # Link the normalize-button with the plot-column-selector

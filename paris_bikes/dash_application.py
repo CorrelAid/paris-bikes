@@ -127,7 +127,7 @@ def update_map(input_value):
     State(component_id="plot-column-selector", component_property="value"),
 )
 def update_plot_column_selector(button_value, selector_value):
-    cols = df.columns.drop(["geometry"])
+    cols = df.columns.drop(["geometry", "iris"])
     col_labels = [
         "Population",
         "Parking spots",

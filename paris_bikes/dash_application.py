@@ -196,6 +196,7 @@ def update_map(demand_input_value, supply_input_value, normalize):
     prevent_initial_call=True,
 )
 def update_supply_demand_radioitems(demand_input_value, supply_input_value):
+    """Guarantee only one RadioItems has a value selected"""
     if callback_context.triggered_id == "demand-column-selector":
         return demand_input_value, None
     elif callback_context.triggered_id == "supply-column-selector":

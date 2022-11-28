@@ -1,26 +1,37 @@
 import dash_bootstrap_components as dbc
 import geopandas as gpd
-from dash import Dash, Input, Output, State, dcc, html
+from dash import Dash, Input, Output, State, callback_context, dcc, html
+from dash.exceptions import PreventUpdate
 
 from paris_bikes.mapping import create_map
 from paris_bikes.utils import get_data_root
 
 # Load data
 df = gpd.read_file(get_data_root() / "feature" / "feature.geojson").set_index("iris")
-# Aggregate nb of parking spots into a single column
-df["nb_parking_spots"] += df["nb_parking_spots_idfm"].fillna(0)
-# Drop the idfm parking spots column
-df.drop(columns=["nb_parking_spots_idfm"], inplace=True)
+# Aggregate nb of parking spots into a single series
+df_parking_spots = df.loc[:, ["nb_parking_spots", "nb_parking_spots_idfm", "geometry"]]
+df_parking_spots["nb_parking_spots"] = df_parking_spots[
+    "nb_parking_spots"
+] + df_parking_spots["nb_parking_spots_idfm"].fillna(0)
+# Drop the parking spots columns
+df.drop(columns=["nb_parking_spots", "nb_parking_spots_idfm"], inplace=True)
 # Impute missing values with 0
 df.fillna(0, inplace=True)
 # Create normalized columns
 # Note: adding +1 to the denominator to avoid dividing by 0
 df = df.assign(
-    **{(col + "_normalized"): (df.loc[:, col] / (df["nb_parking_spots"] + 1)) for col in df.columns.drop("geometry")}
+    **{
+        (col + "_normalized"): (
+            df.loc[:, col] / (df_parking_spots["nb_parking_spots"] + 1)
+        )
+        for col in df.columns.drop("geometry")
+    }
 )
 
 # Initialize the dash app
-application = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP])
+application = Dash(
+    __name__, external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP]
+)
 server = application.server
 
 # Define the dash app layout
@@ -42,21 +53,83 @@ application.layout = dbc.Container(
                                 dbc.CardBody(
                                     [
                                         html.H4(
-                                            [html.I(className="bi bi-bar-chart-line me-2"), "Metrics"],
+                                            [
+                                                html.I(className="bi bi-cart3 me-2"),
+                                                "Demand metrics",
+                                            ],
                                         ),
-                                        dbc.RadioItems(options=[], value="nb_pop", id="plot-column-selector"),
+                                        dbc.RadioItems(
+                                            options=[
+                                                {
+                                                    "label": "Population",
+                                                    "value": "nb_pop",
+                                                },
+                                                {
+                                                    "label": "Museum visitors",
+                                                    "value": "visitors",
+                                                },
+                                                {
+                                                    "label": "Metro passengers",
+                                                    "value": "nb_metro_rer_passengers",
+                                                },
+                                                {
+                                                    "label": "Train passengers",
+                                                    "value": "nb_train_passengers",
+                                                },
+                                                {
+                                                    "label": "Number of shops",
+                                                    "value": "shops_weighted",
+                                                },
+                                                {
+                                                    "label": "School capacity",
+                                                    "value": "school_capacity",
+                                                },
+                                            ],
+                                            value="nb_pop",
+                                            id="demand-column-selector",
+                                        ),
                                     ]
                                 ),
                                 dbc.CardFooter(
                                     dbc.Checklist(
-                                        options=[{"label": "Normalize metrics by number of parking spots", "value": 1}],
+                                        options=[
+                                            {
+                                                "label": "Normalize by parking spots",
+                                                "value": 1,
+                                            }
+                                        ],
                                         value=[],
                                         id="normalize-button",
                                         switch=True,
                                     ),
                                 ),
                             ],
-                        )
+                        ),
+                        html.Br(),
+                        dbc.Card(
+                            [
+                                dbc.CardBody(
+                                    [
+                                        html.H4(
+                                            [
+                                                html.I(className="bi bi-box-seam me-2"),
+                                                "Supply metrics",
+                                            ],
+                                        ),
+                                        dbc.RadioItems(
+                                            options=[
+                                                {
+                                                    "label": "Parking spots",
+                                                    "value": "nb_parking_spots",
+                                                }
+                                            ],
+                                            value=None,
+                                            id="supply-column-selector",
+                                        ),
+                                    ]
+                                ),
+                            ],
+                        ),
                     ],
                     width=3,
                 ),
@@ -86,50 +159,47 @@ application.layout = dbc.Container(
     ]
 )
 
-# Link the plot-column-selector with the output-map
+
 @application.callback(
     Output(component_id="map", component_property="figure"),
-    Input(component_id="plot-column-selector", component_property="value"),
+    Input(component_id="demand-column-selector", component_property="value"),
+    Input(component_id="supply-column-selector", component_property="value"),
+    Input(component_id="normalize-button", component_property="value"),
 )
-def update_map(input_value):
-    fig = create_map(df, input_value, width=None, height=None)
+def update_map(demand_input_value, supply_input_value, normalize):
+    """Update the map according to the selected item on the RadioItems"""
+    # Plot from supply RadioItems or demand RadioItems?
+    if demand_input_value:
+        col = demand_input_value
+    else:
+        col = supply_input_value
+
+    # Normalize or not?
+    if col == "nb_parking_spots":
+        df_plot = df_parking_spots
+    else:
+        if normalize:
+            col += "_normalized"
+        df_plot = df
+
+    fig = create_map(df_plot, col, width=None, height=None)
     # Remove legend title
     fig.update_layout(coloraxis_colorbar={"title": ""})
     return fig
 
 
-# Link the normalize-button with the plot-column-selector
 @application.callback(
-    Output(component_id="plot-column-selector", component_property="options"),
-    Output(component_id="plot-column-selector", component_property="value"),
-    Input(component_id="normalize-button", component_property="value"),
-    State(component_id="plot-column-selector", component_property="value"),
+    Output(component_id="demand-column-selector", component_property="value"),
+    Output(component_id="supply-column-selector", component_property="value"),
+    Input(component_id="demand-column-selector", component_property="value"),
+    Input(component_id="supply-column-selector", component_property="value"),
+    prevent_initial_call=True,
 )
-def update_plot_column_selector(button_value, selector_value):
-    cols = df.columns.drop(["geometry"])
-    col_labels = [
-        "Population",
-        "Parking spots",
-        "Museum visitors",
-        "Metro passengers",
-        "Train passengers",
-        "Number of shops",
-        "School capacity",
-    ]
-    # If nothing is selected, use raw metrics
-    if len(button_value) == 0:
-        if "_normalized" in selector_value:
-            selector_value = selector_value.replace("_normalized", "")
-        cols = [col for col in cols if "_normalized" not in col]
-        options = [{"label": col_label, "value": col} for col_label, col in zip(col_labels, cols)]
-        return options, selector_value
-    # Otherwise, use normalized metrics
-    else:
-        if "_normalized" not in selector_value:
-            selector_value = selector_value + "_normalized"
-        cols = [col for col in cols if "_normalized" in col]
-        options = [{"label": col_label, "value": col} for col_label, col in zip(col_labels, cols)]
-        return options, selector_value
+def update_supply_demand_radioitems(demand_input_value, supply_input_value):
+    if callback_context.triggered_id == "demand-column-selector":
+        return demand_input_value, None
+    elif callback_context.triggered_id == "supply-column-selector":
+        return None, supply_input_value
 
 
 if __name__ == "__main__":

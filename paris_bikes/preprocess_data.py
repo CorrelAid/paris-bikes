@@ -9,8 +9,10 @@ def get_parkings_per_iris(
     """Compute number of bike parking spots per IRIS.
 
     Args:
-        df_parking_raw (gpd.GeoDataFrame): Raw data with location of all parking spots within the city.
-        df_iris (gpd.GeoDataFrame): Raw data with location of all IRIS within the city.
+        df_parking_raw (gpd.GeoDataFrame): Raw data with location of all
+            parking spots within the city.
+        df_iris (gpd.GeoDataFrame): Raw data with location of all IRIS within
+            the city.
 
     Returns:
         pd.DataFrame: Number of bike parking spots per IRIS.
@@ -40,7 +42,8 @@ def get_population_per_iris(df_iris_raw: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     """Get the population per IRIS.
 
     Args:
-        df_iris_raw (gpd.GeoDataFrame): Raw data with location of all IRIS within the city, as well as the population.
+        df_iris_raw (gpd.GeoDataFrame): Raw data with location of all IRIS
+            within the city, as well as the population.
 
     Returns:
         gpd.GeoDataFrame: Population per IRIS.
@@ -58,6 +61,9 @@ def get_population_per_iris(df_iris_raw: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     # Drop duplicated indices
     df_iris = df_iris.loc[~df_iris.index.duplicated()]
 
+    # Convert nb_pop to integer
+    df_iris.loc[:, "nb_pop"] = df_iris.loc[:, "nb_pop"].round(0).astype("int")
+
     return df_iris
 
 
@@ -67,8 +73,10 @@ def get_school_capacity_per_iris(
     """Compute school capacity per IRIS.
 
     Args:
-        df_schools_raw (gpd.GeoDataFrame): Raw data with location and capacity of Paris schools.
-        df_iris (gpd.GeoDataFrame): Raw data with location of all IRIS within the city.
+        df_schools_raw (gpd.GeoDataFrame): Raw data with location and capacity
+            of Paris schools.
+        df_iris (gpd.GeoDataFrame): Raw data with location of all IRIS within
+            the city.
 
     Returns:
         pd.DataFrame: School capacity per IRIS.
@@ -90,12 +98,14 @@ def get_school_capacity_per_iris(
     # Filter only IRIS in Paris
     df_schools = df_schools[df_schools["insee_code"].between(75000, 75999)]
 
-    # Filter only primary and secondary education institutions (other institutions have no info on capacity)
+    # Filter only primary and secondary education institutions (other
+    # institutions have no info on capacity)
     df_schools = df_schools[
         (df_schools["school_type"] == 101) | (df_schools["school_type"] == 102)
     ]
 
-    # Impute missing values of school capacity with mean capacity of similar type
+    # Impute missing values of school capacity with mean capacity of similar
+    # type
     df_schools["school_capacity"] = df_schools["school_capacity"].fillna(
         df_schools.groupby("school_subtype")["school_capacity"].transform("mean")
     )
@@ -106,6 +116,11 @@ def get_school_capacity_per_iris(
     # Get the total school capacity per IRIS
     df_schools = df_schools.groupby("index_right")[["school_capacity"]].sum()
     df_schools.index.rename("iris", inplace=True)
+
+    # Convert school_capacity to integer
+    df_schools.loc[:, "school_capacity"] = (
+        df_schools.loc[:, "school_capacity"].round(0).astype("int")
+    )
 
     return df_schools
 
@@ -156,7 +171,7 @@ def strip(sep, name):
         name (string): The string to be shortened.
 
     Returns:
-        string: Substring of 'name' containing everything before the separator.
+        string: Substring of 'name' containing everything before the separator
     """
     try:
         for s in sep:
@@ -172,7 +187,8 @@ def my_geocoder(row, column, geolocator):
 
     Args:
         row (row of pd.DataFrame): Row of dataframe.
-        column (string): Label of the column that contains the string to geocode.
+        column (string): Label of the column that contains the string to
+            geocode.
         geolocator (Nominatim): Tool to geocode OpenStreetMap data.
 
     Returns:
@@ -192,7 +208,8 @@ def geocode_from_location_name(df_in: pd.DataFrame, location_name_column):
 
     Args:
         df_in (pd.DataFrame): Dataframe with location names to be geocoded
-        location_name_column (string): Name of column with the location names to be geocoded
+        location_name_column (string): Name of column with the location names
+            to be geocoded
 
     Returns:
         gpd.GeoDataFrame: Dataframe with geocoded locations
@@ -218,13 +235,16 @@ def geocode_from_location_name(df_in: pd.DataFrame, location_name_column):
 def clean_museum_data(df_museum_raw):
     """Geocoding and cleaning museum frequentation data.
 
-    TODO Geocoding is working for Kati but not for Joao. Could not figure out why.
+    TODO Geocoding is working for Kati but not for Joao. Could not figure out
+    why.
 
     Args:
-        df (pd.Dataframe): Raw data with frequentation of national museums in Paris in years 2019 and 2020.
+        df (pd.Dataframe): Raw data with frequentation of national museums in
+            Paris in years 2019 and 2020.
 
     Returns:
-        gpd.GeoDataFrame: Clean museum dataset with geolocation (columns: name, type, visitors, year, geometry).
+        gpd.GeoDataFrame: Clean museum dataset with geolocation (columns:
+            name, type, visitors, year, geometry).
     """
     df = df_museum_raw.copy()
 
@@ -272,7 +292,8 @@ def clean_museum_data(df_museum_raw):
     # geolocate museums
     gdf = geocode_from_location_name(df, "name")
 
-    # prepare cleaned dataframe (select and rename columns, add "type" column, fix datatypes, reset index)
+    # prepare cleaned dataframe (select and rename columns, add "type" column,
+    # fix datatypes, reset index)
     gdf["type"] = "museum"
     gdf_museum = gdf[["name", "type", "TOTAL", "Année", "geometry"]].rename(
         {"TOTAL": "visitors", "Année": "year"}, axis=1
@@ -289,8 +310,10 @@ def get_museum_visitors_per_iris(
 ) -> pd.DataFrame:
     """Compute yearly museum visitors per IRIS.
     Args:
-        df_museums_clean (gpd.GeoDataFrame): Cleaned data with location and number of visitors in national museums per year.
-        df_iris (gpd.GeoDataFrame): Raw data with location of all IRIS within the city.
+        df_museums_clean (gpd.GeoDataFrame): Cleaned data with location and
+            number of visitors in national museums per year.
+        df_iris (gpd.GeoDataFrame): Raw data with location of all IRIS within
+            the city.
     Returns:
         pd.DataFrame: Number of yearly museum visitors per IRIS.
     """
@@ -310,8 +333,10 @@ def get_metro_rer_passengers_per_iris(
     """Compute number of metro and RER passengers per IRIS.
 
     Args:
-        df_metro_raw (pd.DataFrame): Raw data with number of metro passengers per station
-        df_iris (gpd.GeoDataFrame): Raw data with location of all IRIS within the city.
+        df_metro_raw (pd.DataFrame): Raw data with number of metro passengers
+            per station
+        df_iris (gpd.GeoDataFrame): Raw data with location of all IRIS within
+            the city.
 
     Returns:
         pd.DataFrame: Number of metro passengers per IRIS.
@@ -330,7 +355,8 @@ def get_metro_rer_passengers_per_iris(
         "bibliotheque", "bibliotheque francois mitterand"
     )
 
-    # Add string ", station" to every station name, to avoid confusions with stations names that are too general
+    # Add string ", station" to every station name, to avoid confusions with
+    # stations names that are too general
     # E.g. "Hotel de Ville" (city hall) exists in every city
     df_metro["station_city"] = df_metro["station"] + ", paris"
 
@@ -355,8 +381,10 @@ def get_train_passengers_per_iris(
     """Compute number of train passengers per IRIS.
 
     Args:
-        df_train_raw (pd.DataFrame): Raw data with number of train passengers per station
-        df_iris (gpd.GeoDataFrame): Raw data with location of all IRIS within the city.
+        df_train_raw (pd.DataFrame): Raw data with number of train passengers
+            per station
+        df_iris (gpd.GeoDataFrame): Raw data with location of all IRIS within
+            the city.
 
     Returns:
         pd.DataFrame: Number of train passengers per IRIS.
@@ -384,7 +412,8 @@ def get_train_passengers_per_iris(
         .copy()
     )
 
-    # Add string ", station" to every station name, to avoid confusions with stations names that are too general
+    # Add string ", station" to every station name, to avoid confusions with
+    # stations names that are too general
     # E.g. "Hotel de Ville" (city hall) exists in every city
     df_train["station_city"] = df_train["station"] + ", paris"
 
@@ -409,8 +438,10 @@ def get_idfm_parkings_per_iris(
     """Compute Île de France Mobilité parking spots (in train stations) per IRIS.
 
     Args:
-        df_idfm_raw (pd.DataFrame): Raw data with location and number of parking spots in IDFM parking facilities.
-        df_iris (gpd.GeoDataFrame): Raw data with location of all IRIS within the city.
+        df_idfm_raw (pd.DataFrame): Raw data with location and number of
+            parking spots in IDFM parking facilities.
+        df_iris (gpd.GeoDataFrame): Raw data with location of all IRIS within
+            the city.
 
     Returns:
         pd.DataFrame: Number of IDFM parking spots per IRIS.

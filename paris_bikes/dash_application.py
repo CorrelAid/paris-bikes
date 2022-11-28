@@ -10,9 +10,9 @@ from paris_bikes.utils import get_data_root
 df = gpd.read_file(get_data_root() / "feature" / "feature.geojson").set_index("iris")
 # Aggregate nb of parking spots into a single series
 df_parking_spots = df.loc[:, ["nb_parking_spots", "nb_parking_spots_idfm", "geometry"]]
-df_parking_spots["nb_parking_spots"] = df_parking_spots[
-    "nb_parking_spots"
-] + df_parking_spots["nb_parking_spots_idfm"].fillna(0)
+df_parking_spots["nb_parking_spots"] = df_parking_spots["nb_parking_spots"] + df_parking_spots[
+    "nb_parking_spots_idfm"
+].fillna(0)
 # Drop the parking spots columns
 df.drop(columns=["nb_parking_spots", "nb_parking_spots_idfm"], inplace=True)
 # Impute missing values with 0
@@ -21,17 +21,13 @@ df.fillna(0, inplace=True)
 # Note: adding +1 to the denominator to avoid dividing by 0
 df = df.assign(
     **{
-        (col + "_normalized"): (
-            df.loc[:, col] / (df_parking_spots["nb_parking_spots"] + 1)
-        )
+        (col + "_normalized"): (df.loc[:, col] / (df_parking_spots["nb_parking_spots"] + 1))
         for col in df.columns.drop("geometry")
     }
 )
 
 # Initialize the dash app
-application = Dash(
-    __name__, external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP]
-)
+application = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP])
 server = application.server
 
 # Define the dash app layout

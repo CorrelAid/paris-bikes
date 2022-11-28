@@ -23,7 +23,7 @@ def create_map(
         hover_data = {
             "iris": False,
             "nb_parking_spots": True,
-            var: False,
+            var: True,
             var.replace("_normalized", ""): True,
         }
     else:

@@ -6,7 +6,9 @@ from paris_bikes.mapping import create_map
 from paris_bikes.utils import get_data_root
 
 # Load data
-df = gpd.read_file(get_data_root() / "feature" / "feature.geojson").set_index("iris")
+df = gpd.read_file(get_data_root() / "feature" / "feature.geojson").set_index(
+    "iris", drop=False
+)
 # Aggregate nb of parking spots into a single column
 df["nb_parking_spots"] += df["nb_parking_spots_idfm"].fillna(0)
 # Drop the idfm parking spots column
@@ -16,11 +18,16 @@ df.fillna(0, inplace=True)
 # Create normalized columns
 # Note: adding +1 to the denominator to avoid dividing by 0
 df = df.assign(
-    **{(col + "_normalized"): (df.loc[:, col] / (df["nb_parking_spots"] + 1)) for col in df.columns.drop("geometry")}
+    **{
+        (col + "_normalized"): (df.loc[:, col] / (df["nb_parking_spots"] + 1))
+        for col in df.columns.drop(["geometry", "iris"])
+    }
 )
 
 # Initialize the dash app
-application = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP])
+application = Dash(
+    __name__, external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP]
+)
 server = application.server
 
 # Define the dash app layout
@@ -42,14 +49,28 @@ application.layout = dbc.Container(
                                 dbc.CardBody(
                                     [
                                         html.H4(
-                                            [html.I(className="bi bi-bar-chart-line me-2"), "Metrics"],
+                                            [
+                                                html.I(
+                                                    className="bi bi-bar-chart-line me-2"
+                                                ),
+                                                "Metrics",
+                                            ],
                                         ),
-                                        dbc.RadioItems(options=[], value="nb_pop", id="plot-column-selector"),
+                                        dbc.RadioItems(
+                                            options=[],
+                                            value="nb_pop",
+                                            id="plot-column-selector",
+                                        ),
                                     ]
                                 ),
                                 dbc.CardFooter(
                                     dbc.Checklist(
-                                        options=[{"label": "Normalize metrics by number of parking spots", "value": 1}],
+                                        options=[
+                                            {
+                                                "label": "Normalize metrics by number of parking spots",
+                                                "value": 1,
+                                            }
+                                        ],
                                         value=[],
                                         id="normalize-button",
                                         switch=True,
@@ -106,7 +127,7 @@ def update_map(input_value):
     State(component_id="plot-column-selector", component_property="value"),
 )
 def update_plot_column_selector(button_value, selector_value):
-    cols = df.columns.drop(["geometry"])
+    cols = df.columns.drop(["geometry", "iris"])
     col_labels = [
         "Population",
         "Parking spots",
@@ -121,14 +142,20 @@ def update_plot_column_selector(button_value, selector_value):
         if "_normalized" in selector_value:
             selector_value = selector_value.replace("_normalized", "")
         cols = [col for col in cols if "_normalized" not in col]
-        options = [{"label": col_label, "value": col} for col_label, col in zip(col_labels, cols)]
+        options = [
+            {"label": col_label, "value": col}
+            for col_label, col in zip(col_labels, cols)
+        ]
         return options, selector_value
     # Otherwise, use normalized metrics
     else:
         if "_normalized" not in selector_value:
             selector_value = selector_value + "_normalized"
         cols = [col for col in cols if "_normalized" in col]
-        options = [{"label": col_label, "value": col} for col_label, col in zip(col_labels, cols)]
+        options = [
+            {"label": col_label, "value": col}
+            for col_label, col in zip(col_labels, cols)
+        ]
         return options, selector_value
 
 

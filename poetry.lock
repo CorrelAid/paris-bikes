@@ -518,6 +518,20 @@ diskcache = ["diskcache (>=5.2.1)", "multiprocess (>=0.70.12)", "psutil (>=5.8.0
 testing = ["beautifulsoup4 (>=4.8.2)", "lxml (>=4.6.2)", "percy (>=2.0.2)", "pytest (>=6.0.2)", "requests[security] (>=2.21.0)", "selenium (>=3.141.0,<=4.2.0)", "waitress (>=1.4.4)", "multiprocess (>=0.70.12)", "psutil (>=5.8.0)", "cryptography (<3.4)"]
 
 [[package]]
+name = "dash-bootstrap-components"
+version = "1.2.1"
+description = "Bootstrap themed components for use in Plotly Dash"
+category = "main"
+optional = false
+python-versions = ">=3.6, <4"
+
+[package.dependencies]
+dash = ">=2.0.0"
+
+[package.extras]
+pandas = ["numpy", "pandas"]
+
+[[package]]
 name = "dash-core-components"
 version = "2.0.0"
 description = "Core component suite for Dash"
@@ -2599,7 +2613,7 @@ test = ["zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "192e0ad2eb1bbfc5f0edb037865ee4d5422ead1ee985704877bf921d89a273ed"
+content-hash = "6d86356892556b6d6231488acef4f006b7ac8201e06849952611022581df3bfb"
 
 [metadata.files]
 aiohttp = []
@@ -2640,6 +2654,7 @@ contourpy = []
 cryptography = []
 cycler = []
 dash = []
+dash-bootstrap-components = []
 dash-core-components = []
 dash-html-components = []
 dash-table = []

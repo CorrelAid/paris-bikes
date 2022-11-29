@@ -19,6 +19,7 @@ matplotlib = "^3.6.1"
 geopy = "^2.2.0"
 black = "^22.10.0"
 dash = "^2.7.0"
+dash-bootstrap-components = "^1.2.1"
 
 [tool.poetry.dev-dependencies]
 

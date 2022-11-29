@@ -4,7 +4,12 @@ import plotly.express as px
 
 
 def create_map(
-    df: gpd.GeoDataFrame, var: str, width=600, height=400, tooltip_no_normalized=True
+    df: gpd.GeoDataFrame,
+    var: str,
+    width=600,
+    height=400,
+    tooltip_no_normalized=True,
+    colorscale="OrRd",
 ):
     """Compute number of bike parking spots per IRIS.
 
@@ -38,7 +43,7 @@ def create_map(
         color=var,
         width=width,
         height=height,
-        color_continuous_scale="OrRd",
+        color_continuous_scale=colorscale,
         opacity=0.75,
         center={"lat": 48.86, "lon": 2.34},
         zoom=11,

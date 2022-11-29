@@ -36,8 +36,11 @@ application.layout = dbc.Container(
     [
         dbc.Row(
             [
-                html.H1(children="Paris Bikes"),
+                html.H1(children="Paris Parking Demand Index", style={'marginTop': 20}),
                 html.Br(),
+                html.Div("The Paris Parking Demand Index visualizes the number of existing bicycle parking spaces in the City of Paris in relation to metrics that might indicate demand for bicycle parking, such as the number of stores or people entering the metro."),
+                html.Br(),
+                html.Div("Aggregated at the IRIS level, the smallest unit of municipal infrastructure in France, this index helps determine how adequately areas are served in terms of parking facilities, while leaving flexibility as to which exact location they should be built.")
             ]
         ),
         html.Hr(),
@@ -137,21 +140,24 @@ application.layout = dbc.Container(
         ),
         html.Hr(),
         dbc.Row(
-            html.P(
-                [
-                    "This project was developed by ",
-                    html.A(
-                        "CorrelAid",
-                        href="https://correlaid.org/",
-                    ),
-                    " for the City of Paris. The source code can be found ",
-                    html.A(
-                        "on GitHub",
-                        href="https://github.com/CorrelAid/paris-bikes",
-                    ),
-                    ".",
-                ]
-            ),
+            [
+                html.Div("Version: Alpha/Prototype", style={'color': 'grey','font-style': 'italic'}),
+                html.P(
+                    [
+                        "This project was developed by ",
+                        html.A(
+                            "CorrelAid",
+                            href="https://correlaid.org/",
+                        ),
+                        " for the City of Paris. The source code can be found ",
+                        html.A(
+                            "on GitHub",
+                            href="https://github.com/CorrelAid/paris-bikes",
+                        ),
+                        ".",
+                    ]
+                ),
+            ]
         ),
     ]
 )

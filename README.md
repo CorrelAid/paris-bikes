@@ -1,12 +1,25 @@
 # Where to build new bike parking spots in Paris?
 
-*This is the repository of the CorreAid project `paris-bikes` for the City of Paris.*
+This is the repository of the CorreAid project `paris-bikes` in collaboration with the City of Paris.
+TODO ADD CONTEXT AND GOALS
 
-TODO project description
+# Paris Parking Demand Index
 
-TODO project goals
+The Paris Parking Demand Index is a web app that visualizes the number of existing bicycle parking spaces in the City of Paris in relation to metrics that might indicate demand for bicycle parking, such as the number of stores or people entering the metro.
+Aggregated at the IRIS level, the smallest unit of municipal infrastructure in France, this index helps determine how adequately areas are served in terms of parking facilities, while leaving flexibility as to which exact location they should be built.
+All data used in this project is open data from municipal and regional open data portals.
 
-TODO stakeholder list
+Have a look [here TODO ADD LINK](TODO ADD LINK) at a hosted version of the Parking Demand Index.
+
+You can also clone the repository and work with the code yourself. See section [Project setup](# Project setup - for developers).
+
+## Blog article
+
+Would you like to learn more about the project, and how we worked together as a group of volunteers to address the challenge of supporting decision-making in the City of Paris with open data? Check out the [blog article about this project TODO ADD LINK](TODO ADD LINK)!
+
+## Contributors
+
+TODO List of contributors incl. role/types of contributions (to also highlight non-code contributions that are not directly visible on GitHub!)
 
 ## We thank
 <p>

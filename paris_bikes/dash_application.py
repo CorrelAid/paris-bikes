@@ -168,15 +168,17 @@ def update_map(demand_input_value, supply_input_value, normalize):
     # Plot from supply RadioItems or demand RadioItems?
     if demand_input_value:
         col = demand_input_value
+        colorscale = "OrRd"
     else:
         col = supply_input_value
+        colorscale = "Greens"
 
     # Normalize or not?
     if col != "nb_parking_spots":
         if normalize:
             col += "_normalized"
 
-    fig = create_map(df, col, width=None, height=None)
+    fig = create_map(df, col, width=None, height=None, colorscale=colorscale)
     # Remove legend title
     fig.update_layout(coloraxis_colorbar={"title": ""})
     return fig

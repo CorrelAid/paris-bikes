@@ -41,7 +41,11 @@ Check out the blog article about this project TODO ADD LINK!
 
 ## Contributors and supporters
 
-TODO List of contributors incl. role/types of contributions (to also highlight non-code contributions that are not directly visible on GitHub!)
+Meet the project team! (*listed in alphabetical order*)
+- **Team Data**: [@akashrajkn](https://github.com/akashrajkn), [@dietrichsimon](https://github.com/dietrichsimon), [@Goldmariek](https://github.com/Goldmariek), [@katoss](https://github.com/katoss), [@operte](https://github.com/operte)
+- **Team Research**: [@astrid4559](https://github.com/astrid4559), [@KarinRoe](https://github.com/KarinRoe),[@Liyubov](https://github.com/Liyubov), [@mpadge](https://github.com/mpadge),[@ryanrakusin](https://github.com/ryanrakusin)
+
+Special thanks go to [@friep](https://github.com/friep) from CorrelAid for helping us setting up the project, to the CorrelAid organization, to Mélanie, Benoît, and Mourad from the City of Paris for taking the time to collaborate with us and thus giving us the chance to work on this interesting project, and to Gaëll from the Learning Planet Institute for setting up the contact, and to the Learning Planet Institute for having CorrelAid as a student club and enabling us to use rooms and infrastructure.
 
 <p align="center">
     <img src="img/Ville_de_Paris_Logo.png" width="100" style="margin-left:20px"> &ensp;&ensp;&ensp;&ensp;

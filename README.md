@@ -1,7 +1,25 @@
-# Where to build new bike parking spots in Paris?
+# "Where to build new bicycle parking spots in Paris? Supporting data-driven decision making with open data"
 
-This is the repository of the CorreAid project `paris-bikes` in collaboration with the City of Paris.
-TODO ADD CONTEXT AND GOALS
+TL;DR This is the repository of the CorreAid project `paris-bikes` in collaboration with the City of Paris.
+
+Metropole areas like the city of Paris are facing important **challenges transitioning to green mobility**. Space to build new infrastructures for alternative transport, like bicycle lances or parking spots, is limited. Often existing infrastructure has to be repurposed, and there are lots of local restrictions. In the last years the City of Paris has implemented [ambitious goals in terms of mobility transition](https://www.paris.fr/pages/paris-a-velo-225), which will be [continued in the years to come](https://www.paris.fr/pages/un-nouveau-plan-velo-pour-une-ville-100-cyclable-19554).
+
+Paris, and France on a regional and national level, have also started publishing **lots of open data** on a multitude of platforms, like [data.gouv.fr](https://www.data.gouv.fr/fr/) or [parisdata.opendatasoft.com](https://parisdata.opendatasoft.com/).
+
+This raises the question, if (or rather *how*) all of this **data could be used to support decision-making**, e.g. on where to **build new bike parking spots**.
+
+And this is where CorrelAid comes in! *(You don't know CorrelAid? Have a [look here](https://correlaid.org/en/))*
+
+After a first contact for [Open Data Day 2022](https://github.com/CorrelAid/open_data_22_paris) the mobility agency, "Mission Vélo"(Mission Bike), and the innovation office of the City of Paris teamed up with an international group of CorrelAid volunteers to work on this question.
+
+From July to December 2022, the team explored open data repositories, researched approaches of other cities, brainstormed, discussed, designed, and coded. The results can be found in this repository :)  
+
+#### Table of Contents  
+- [Paris Parking Demand Index](#paris-parking-demand-index)
+- [Blog article](#blog-article)
+- [Contributors and supporters](#contributors-and-supporters)
+- [Project setup](#project-setup)
+- [Project management](#project-management)
 
 ## Paris Parking Demand Index
 
@@ -9,23 +27,26 @@ The Paris Parking Demand Index is a web app that visualizes the number of existi
 Aggregated at the IRIS level, the smallest unit of municipal infrastructure in France, this index helps determine how adequately areas are served in terms of parking facilities, while leaving flexibility as to which exact location they should be built.
 All data used in this project is open data from municipal and regional open data portals.
 
-Have a look [here TODO ADD LINK](TODO ADD LINK) at a hosted version of the Parking Demand Index.
+Have a look here TODO ADD LINK at a hosted version of the Parking Demand Index.
 
-You can also clone the repository and work with the code yourself. See section [Project setup](#-Project-setup).
+You can also clone the repository and work with the code yourself. See section [Project setup](#project-setup).
+
+TODO ADD SCREENSHOT
 
 ## Blog article
 
-Would you like to learn more about the project, and how we worked together as a group of volunteers to address the challenge of supporting decision-making in the City of Paris with open data? Check out the [blog article about this project TODO ADD LINK](TODO ADD LINK)!
+Would you like to learn more about the project, and how we worked together as a group of volunteers to address the challenge of supporting decision-making in the City of Paris with open data? 
 
-## Contributors
+Check out the blog article about this project TODO ADD LINK!
+
+## Contributors and supporters
 
 TODO List of contributors incl. role/types of contributions (to also highlight non-code contributions that are not directly visible on GitHub!)
 
-## We thank
-<p>
-    <img src="img/Ville_de_Paris_Logo.png" width="100">
-    <img src="img/LPI_Logo.png" width="130"> 
-    <img src="img/CorrelAid_Logo.png" width="130" style="margin-left:20px">
+<p align="center">
+    <img src="img/Ville_de_Paris_Logo.png" width="100" style="margin-left:20px"> &ensp;&ensp;&ensp;&ensp;
+    <img src="img/CorrelAid_Logo.png" width="130" style="padding-left:20px"> &ensp;&ensp;&ensp;
+    <img src="img/LPI_Logo.png" width="130" style="margin-left:20px">    
 </p>
 
 # Project setup
@@ -66,7 +87,9 @@ poetry shell
 ## Data management
 
 We use [DVC](https://dvc.org/) for data management and version control.
-DVC is setup to store our data repository on our project's Google Drive (folder name `dvcstore`).
+DVC is setup to store our data repository on our project's Google Drive (folder name `dvcstore`). 
+
+**Important:** We stored the files for dvc in a private cloud from CorrelAid, so you won't be able to access the raw data unless you have access to that cloud. However, the [`feature.geojson`](data/feature/feature.geojson) file, which you need to run the dash application, is in this GitHub repository. Since we used open data, all the raw data can be found online, see [`metadata.md`](data/metadata.md).
 
 DVC is easy to use and follows a syntax similar to git.
 

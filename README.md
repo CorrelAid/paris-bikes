@@ -2,7 +2,7 @@
 
 TL;DR This is the repository of the CorreAid project `paris-bikes` in collaboration with the City of Paris.
 
-Metropolitan areas like the city of Paris are facing important **challenges transitioning to green mobility**. Space to build new infrastructures for alternative transport, like bicycle lances or parking spots, is limited. Often existing infrastructure has to be repurposed, and there are lots of local restrictions. In the last years the City of Paris has implemented [ambitious goals in terms of mobility transition](https://www.paris.fr/pages/paris-a-velo-225), which will be [continued in the years to come](https://www.paris.fr/pages/un-nouveau-plan-velo-pour-une-ville-100-cyclable-19554).
+Metropolitan areas like the city of Paris are facing important **challenges transitioning to green mobility**. Space to build new infrastructures for alternative transport, like bicycle lanes or parking spots, is limited. Often, existing infrastructure has to be repurposed, and there are lots of local restrictions. In the last years, the City of Paris has implemented [ambitious goals in terms of mobility transition](https://www.paris.fr/pages/paris-a-velo-225), which will [continue in the years to come](https://www.paris.fr/pages/un-nouveau-plan-velo-pour-une-ville-100-cyclable-19554).
 
 Paris, and France on a regional and national level, have also started publishing **lots of open data** on a multitude of platforms, like [data.gouv.fr](https://www.data.gouv.fr/fr/) or [parisdata.opendatasoft.com](https://parisdata.opendatasoft.com/).
 
@@ -156,9 +156,5 @@ How do we know that we're really done with a task and have not forgotten anythin
 - **Git**: the code is ready to be merged to the main branch or is already on the main branch
 - **Clean Repository**: old, outdated code and files are deleted
 - **Consistent code style**: code is styled consistently and linted using `black`
-- **Unit tests**
-    - existing unit tests pass
-    - if possible: new code is properly tested
-    - unit test coverage >xx%
 
 See [here](https://github.com/CorrelAid/definition-of-done) for more details.

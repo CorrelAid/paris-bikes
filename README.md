@@ -1,4 +1,4 @@
-# "Where to build new bicycle parking spots in Paris? Supporting data-driven decision making with open data"
+# "Where to build new bicycle parking spots in Paris? Supporting data-driven decision-making with open data"
 
 TL;DR This is the repository of the CorreAid project `paris-bikes` in collaboration with the City of Paris.
 

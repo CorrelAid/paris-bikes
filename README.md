@@ -47,6 +47,8 @@ Meet the project team! (*listed in alphabetical order*)
 
 Special thanks go to [@friep](https://github.com/friep) from CorrelAid for helping us setting up the project, to the CorrelAid organization, to Mélanie, Benoît, and Mourad from the City of Paris for taking the time to collaborate with us and thus giving us the chance to work on this interesting project, and to Gaëll from the Learning Planet Institute for setting up the contact, and to the Learning Planet Institute for having CorrelAid as a student club and enabling us to use rooms and infrastructure.
 
+### We thank
+
 <p align="center">
     <img src="img/Ville_de_Paris_Logo.png" width="100" style="margin-left:20px"> &ensp;&ensp;&ensp;&ensp;
     <img src="img/CorrelAid_Logo.png" width="130" style="padding-left:20px"> &ensp;&ensp;&ensp;

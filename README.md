@@ -10,7 +10,7 @@ This raises the question, if (or rather *how*) all of this **data could be used 
 
 And this is where CorrelAid comes in! *(You don't know CorrelAid? Have a [look here](https://correlaid.org/en/))*
 
-After a first contact for [Open Data Day 2022](https://github.com/CorrelAid/open_data_22_paris) the mobility agency, "Mission Vélo"(Mission Bike), and the innovation office of the City of Paris teamed up with an international group of CorrelAid volunteers to work on this question.
+After a first contact for [Open Data Day 2022](https://github.com/CorrelAid/open_data_22_paris) the mobility agency "Mission Vélo" (Mission Bike) and the innovation office of the City of Paris teamed up with an international group of CorrelAid volunteers to work on this question.
 
 From July to December 2022, the team explored open data repositories, researched approaches of other cities, brainstormed, discussed, designed, and coded. The results can be found in this repository :)  
 

@@ -1,24 +1,65 @@
-# paris-bikes
+# "Where to build new bicycle parking spots in Paris? Supporting data-driven decision-making with open data"
 
-Repository of the CorreAid project `paris-bikes` for the City of Paris.
+TL;DR This is the repository of the CorreAid project `paris-bikes` in collaboration with the City of Paris.
 
-TODO project description
+Metropolitan areas like the city of Paris are facing important **challenges transitioning to green mobility**. Space to build new infrastructures for alternative transport, like bicycle lanes or parking spots, is limited. Often, existing infrastructure has to be repurposed, and there are lots of local restrictions. In the last years, the City of Paris has implemented [ambitious goals in terms of mobility transition](https://www.paris.fr/pages/paris-a-velo-225), which will [continue in the years to come](https://www.paris.fr/pages/un-nouveau-plan-velo-pour-une-ville-100-cyclable-19554).
 
-TODO project goals
+Paris, and France on a regional and national level, have also started publishing **lots of open data** on a multitude of platforms, like [data.gouv.fr](https://www.data.gouv.fr/fr/) or [parisdata.opendatasoft.com](https://parisdata.opendatasoft.com/).
 
-TODO stakeholder list
+This raises the question, if (or rather *how*) all of this **data could be used to support decision-making**, e.g. on where to **build new bike parking spots**.
 
-## Useful links
+And this is where CorrelAid comes in! *(You don't know CorrelAid? Have a [look here](https://correlaid.org/en/))*
 
-- [Google Drive](https://drive.google.com/drive/folders/1mmsON23Bz-7xB3Y3qGHC0kqSKG6aXUVr)
-- [Slack channel](https://correlaid.slack.com/archives/C03NAN24GDN)
-- [Planning Mural](https://app.mural.co/t/correlaid9916/m/correlaid9916/1657610032235/e86d4422b5be6421cd132e9c47a3eb82f0d191f3)
-- [Team Manifesto Mural](https://app.mural.co/t/correlaid9916/m/correlaid9916/1657265397906/558401920c32987ce75a2853aaea0e06aa6e94e2)
-- [CorrelAid docs](https://docs.correlaid.org/)
+After a first contact for [Open Data Day 2022](https://github.com/CorrelAid/open_data_22_paris) the mobility agency "Mission Vélo" (Mission Bike) and the innovation office of the City of Paris teamed up with an international group of CorrelAid volunteers to work on this question.
 
-## Dash application
+From July to December 2022, the team explored open data repositories, researched approaches of other cities, brainstormed, discussed, designed, and coded. The results can be found in this repository :)  
 
-TODO add some context in the project description about the dash app
+#### Table of Contents  
+- [Paris Parking Demand Index](#paris-parking-demand-index)
+- [Blog article](#blog-article)
+- [Contributors and supporters](#contributors-and-supporters)
+- [Project setup](#project-setup)
+- [Project management](#project-management)
+
+## Paris Parking Demand Index
+
+The Paris Parking Demand Index is a web app that visualizes the number of existing bicycle parking spaces in the City of Paris in relation to metrics that might indicate demand for bicycle parking, such as the number of stores or people entering the metro.
+Aggregated at the IRIS level, the smallest unit of municipal infrastructure in France, this index helps determine how adequately areas are served in terms of parking facilities, while leaving flexibility as to which exact location they should be built.
+All data used in this project is open data from municipal and regional open data portals.
+
+Have a look here TODO ADD LINK at a hosted version of the Parking Demand Index.
+
+You can also clone the repository and work with the code yourself. See section [Project setup](#project-setup).
+
+TODO ADD SCREENSHOT
+
+## Blog article
+
+Would you like to learn more about the project, and how we worked together as a group of volunteers to address the challenge of supporting decision-making in the City of Paris with open data? 
+
+Check out the blog article about this project TODO ADD LINK!
+
+## Contributors and supporters
+
+Meet the project team! (*listed in alphabetical order*)
+- **Team Data**: [@akashrajkn](https://github.com/akashrajkn), [@dietrichsimon](https://github.com/dietrichsimon), [@Goldmariek](https://github.com/Goldmariek), [@katoss](https://github.com/katoss), [@operte](https://github.com/operte)
+- **Team Research**: [@astrid4559](https://github.com/astrid4559), [@KarinRoe](https://github.com/KarinRoe),[@Liyubov](https://github.com/Liyubov), [@mpadge](https://github.com/mpadge),[@ryanrakusin](https://github.com/ryanrakusin)
+
+Special thanks go to [@friep](https://github.com/friep) from CorrelAid for helping us setting up the project, to the CorrelAid organization, to Mélanie, Benoît, and Mourad from the City of Paris for taking the time to collaborate with us and thus giving us the chance to work on this interesting project, and to Gaëll from the Learning Planet Institute for setting up the contact, and to the Learning Planet Institute for having CorrelAid as a student club and enabling us to use rooms and infrastructure.
+
+### We thank
+
+<p align="center">
+    <img src="img/Ville_de_Paris_Logo.png" width="100" style="margin-left:20px"> &ensp;&ensp;&ensp;&ensp;
+    <img src="img/CorrelAid_Logo.png" width="130" style="padding-left:20px"> &ensp;&ensp;&ensp;
+    <img src="img/LPI_Logo.png" width="130" style="margin-left:20px">    
+</p>
+
+## Project setup
+
+### Dash application
+
+The is the web app of the Parking Demand Index. It is an interactive map, which allows you to select and combine different metrics to calculate and visualize parking demand for IRIS sectors in Paris. 
 
 To start the Dash application server locally, from the root of this repo, execute:
 
@@ -27,8 +68,6 @@ python paris_bikes/dash_application.py
 ```
 
 and navigate to http://localhost:5000 in your browser.
-
-## Project setup
 
 ### Development environment
 
@@ -54,7 +93,9 @@ poetry shell
 ### Data management
 
 We use [DVC](https://dvc.org/) for data management and version control.
-DVC is setup to store our data repository on our project's Google Drive (folder name `dvcstore`).
+DVC is setup to store our data repository on our project's Google Drive (folder name `dvcstore`). 
+
+**Important:** We stored the files for dvc in a private cloud from CorrelAid, so you won't be able to access the raw data unless you have access to that cloud. However, the [`feature.geojson`](data/feature/feature.geojson) file, which you need to run the dash application, is in this GitHub repository. Since we used open data, all the raw data can be found online, see [`metadata.md`](data/metadata.md).
 
 DVC is easy to use and follows a syntax similar to git.
 
@@ -90,7 +131,17 @@ dvc checkout
 
 A quick starting guide can be found [here](https://dvc.org/doc/start/data-management).
 
-## Definition of Done
+## Project management
+
+### Useful links
+
+- [Google Drive](https://drive.google.com/drive/folders/1mmsON23Bz-7xB3Y3qGHC0kqSKG6aXUVr)
+- [Slack channel](https://correlaid.slack.com/archives/C03NAN24GDN)
+- [Planning Mural](https://app.mural.co/t/correlaid9916/m/correlaid9916/1657610032235/e86d4422b5be6421cd132e9c47a3eb82f0d191f3)
+- [Team Manifesto Mural](https://app.mural.co/t/correlaid9916/m/correlaid9916/1657265397906/558401920c32987ce75a2853aaea0e06aa6e94e2)
+- [CorrelAid docs](https://docs.correlaid.org/)
+
+### Definition of Done
 
 How do we know that we're really done with a task and have not forgotten anything important? In this project, we use the following Definition of Done:
 
@@ -107,9 +158,5 @@ How do we know that we're really done with a task and have not forgotten anythin
 - **Git**: the code is ready to be merged to the main branch or is already on the main branch
 - **Clean Repository**: old, outdated code and files are deleted
 - **Consistent code style**: code is styled consistently and linted using `black`
-- **Unit tests**
-    - existing unit tests pass
-    - if possible: new code is properly tested
-    - unit test coverage >xx%
 
 See [here](https://github.com/CorrelAid/definition-of-done) for more details.

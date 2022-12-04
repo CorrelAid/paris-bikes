@@ -71,7 +71,18 @@ application.layout = dbc.Container(
                                                 html.I(
                                                     className="bi bi-bar-chart-line me-2"
                                                 ),
-                                                "Indices",
+                                                "Indices ",
+                                                html.I(
+                                                    className="bi bi-info",
+                                                    id="indices-tooltip",
+                                                ),
+                                                dbc.Tooltip(
+                                                    "Indices used to estimate supply and demand for bike parking. "
+                                                    "These built by scaling the supply and demand metrics between 0 and 1, "
+                                                    "where 0 is the minimum metric value, and 1 the maximum. "
+                                                    "The scaled metrics are then summed at IRIS level.",
+                                                    target="indices-tooltip",
+                                                ),
                                             ],
                                         ),
                                         dbc.RadioItems(
@@ -104,7 +115,17 @@ application.layout = dbc.Container(
                                         html.H4(
                                             [
                                                 html.I(className="bi bi-cart3 me-2"),
-                                                "Demand metrics",
+                                                "Demand metrics ",
+                                                html.I(
+                                                    className="bi bi-info",
+                                                    id="demand-tooltip",
+                                                ),
+                                                dbc.Tooltip(
+                                                    "Metrics used to estimate demand for bike parking. "
+                                                    "These are based on open data sources listed at the "
+                                                    "bottom of the webpage.",
+                                                    target="demand-tooltip",
+                                                ),
                                             ],
                                         ),
                                         dbc.RadioItems(
@@ -162,7 +183,17 @@ application.layout = dbc.Container(
                                         html.H4(
                                             [
                                                 html.I(className="bi bi-box-seam me-2"),
-                                                "Supply metrics",
+                                                "Supply metrics ",
+                                                html.I(
+                                                    className="bi bi-info",
+                                                    id="supply-tooltip",
+                                                ),
+                                                dbc.Tooltip(
+                                                    "Metrics used to estimate supply for bike parking. "
+                                                    "These are based on open data sources listed at the "
+                                                    "bottom of the webpage.",
+                                                    target="supply-tooltip",
+                                                ),
                                             ],
                                         ),
                                         dbc.RadioItems(

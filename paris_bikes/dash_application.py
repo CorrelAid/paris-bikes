@@ -6,10 +6,12 @@ from dash.exceptions import PreventUpdate
 from paris_bikes.mapping import create_map
 from paris_bikes.utils import get_data_root
 
-# Load data
+# Load data and metadata
 df = gpd.read_file(get_data_root() / "feature" / "feature.geojson").set_index(
     "iris", drop=False
 )
+with open(get_data_root() / "metadata.md", "r") as file:
+    data_sources = file.read()
 # Aggregate nb of parking spots into a single series
 df["nb_parking_spots"] += df["nb_parking_spots_idfm"].fillna(0)
 # Drop the parking spots columns
@@ -36,11 +38,15 @@ application.layout = dbc.Container(
     [
         dbc.Row(
             [
-                html.H1(children="Paris Parking Demand Index", style={'marginTop': 20}),
+                html.H1(children="Paris Parking Demand Index", style={"marginTop": 20}),
                 html.Br(),
-                html.Div("The Paris Parking Demand Index visualizes the number of existing bicycle parking spaces in the City of Paris in relation to metrics that might indicate demand for bicycle parking, such as the number of stores or people entering the metro."),
+                html.Div(
+                    "The Paris Parking Demand Index visualizes the number of existing bicycle parking spaces in the City of Paris in relation to metrics that might indicate demand for bicycle parking, such as the number of stores or people entering the metro."
+                ),
                 html.Br(),
-                html.Div("Aggregated at the IRIS level, the smallest unit of municipal infrastructure in France, this index helps determine how adequately areas are served in terms of parking facilities, while leaving flexibility as to which exact location they should be built.")
+                html.Div(
+                    "Aggregated at the IRIS level, the smallest unit of municipal infrastructure in France, this index helps determine how adequately areas are served in terms of parking facilities, while leaving flexibility as to which exact location they should be built."
+                ),
             ]
         ),
         html.Hr(),
@@ -141,7 +147,10 @@ application.layout = dbc.Container(
         html.Hr(),
         dbc.Row(
             [
-                html.Div("Version: Alpha/Prototype", style={'color': 'grey','font-style': 'italic'}),
+                html.Div(
+                    "Version: Alpha/Prototype",
+                    style={"color": "grey", "font-style": "italic"},
+                ),
                 html.P(
                     [
                         "This project was developed by ",
@@ -154,8 +163,21 @@ application.layout = dbc.Container(
                             "on GitHub",
                             href="https://github.com/CorrelAid/paris-bikes",
                         ),
+                        ". The data sources are listed ",
+                        dbc.Button(
+                            "here",
+                            id="data-sources-button",
+                            n_clicks=0,
+                            color="primary",
+                            outline=True,
+                        ),
                         ".",
                     ]
+                ),
+                dbc.Collapse(
+                    dbc.Card(dbc.CardBody(dcc.Markdown(data_sources))),
+                    id="data-sources-collapse",
+                    is_open=False,
                 ),
             ]
         ),
@@ -203,6 +225,17 @@ def update_supply_demand_radioitems(demand_input_value, supply_input_value):
         return demand_input_value, None
     elif callback_context.triggered_id == "supply-column-selector":
         return None, supply_input_value
+
+
+@application.callback(
+    Output("data-sources-collapse", "is_open"),
+    [Input("data-sources-button", "n_clicks")],
+    [State("data-sources-collapse", "is_open")],
+)
+def toggle_collapse(n, is_open):
+    if n:
+        return not is_open
+    return is_open
 
 
 if __name__ == "__main__":

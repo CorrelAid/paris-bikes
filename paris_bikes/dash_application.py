@@ -71,7 +71,7 @@ application.layout = dbc.Container(
                                                 html.I(
                                                     className="bi bi-bar-chart-line me-2"
                                                 ),
-                                                "Demand index",
+                                                "Indices",
                                             ],
                                         ),
                                         dbc.RadioItems(
@@ -85,7 +85,7 @@ application.layout = dbc.Container(
                                                     "value": "supply_index",
                                                 },
                                                 {
-                                                    "label": "Demand/Supply",
+                                                    "label": "Demand/Supply Index",
                                                     "value": "demand_supply_index",
                                                 },
                                             ],

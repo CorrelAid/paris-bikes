@@ -167,7 +167,7 @@ def create_parking_index(feature_dataset = '',
     # add parking index to original geodataframe
     df_parking_index = feature_dataset.join(df_aggr[['parking_index']])
 
-    parking_index_root_filepath = get_data_root() / "parking_index"
-    df_parking_index.to_file(parking_index_root_filepath / "parking_index.geojson", driver="GeoJSON")
+    # normalize parking supply
+    df_parking_index['parking_normalized'] = (df_parking_index['nb_parking_spots'] - df_parking_index['nb_parking_spots'].min()) / (df_parking_index['nb_parking_spots'].max() - df_parking_index['nb_parking_spots'].min())
 
     return df_parking_index

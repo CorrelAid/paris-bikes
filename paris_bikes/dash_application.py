@@ -4,6 +4,7 @@ from dash import Dash, Input, Output, State, callback_context, dcc, html
 from dash.exceptions import PreventUpdate
 
 from paris_bikes.mapping import create_map
+from paris_bikes.pipelines import create_parking_index
 from paris_bikes.utils import get_data_root
 
 # Load data
@@ -24,6 +25,15 @@ df = df.assign(
         for col in df.columns.drop(["geometry", "iris"])
     }
 )
+# Create scaled columns
+df = df.join(
+    create_parking_index(df)
+    .loc[:, ["parking_index", "parking_normalized"]]
+    .rename(
+        columns={"parking_index": "demand_index", "parking_normalized": "supply_index"}
+    )
+    .assign(demand_supply_index=lambda x: x["demand_index"] / x["supply_index"])
+)
 
 # Initialize the dash app
 application = Dash(
@@ -36,11 +46,15 @@ application.layout = dbc.Container(
     [
         dbc.Row(
             [
-                html.H1(children="Paris Parking Demand Index", style={'marginTop': 20}),
+                html.H1(children="Paris Parking Demand Index", style={"marginTop": 20}),
                 html.Br(),
-                html.Div("The Paris Parking Demand Index visualizes the number of existing bicycle parking spaces in the City of Paris in relation to metrics that might indicate demand for bicycle parking, such as the number of stores or people entering the metro."),
+                html.Div(
+                    "The Paris Parking Demand Index visualizes the number of existing bicycle parking spaces in the City of Paris in relation to metrics that might indicate demand for bicycle parking, such as the number of stores or people entering the metro."
+                ),
                 html.Br(),
-                html.Div("Aggregated at the IRIS level, the smallest unit of municipal infrastructure in France, this index helps determine how adequately areas are served in terms of parking facilities, while leaving flexibility as to which exact location they should be built.")
+                html.Div(
+                    "Aggregated at the IRIS level, the smallest unit of municipal infrastructure in France, this index helps determine how adequately areas are served in terms of parking facilities, while leaving flexibility as to which exact location they should be built."
+                ),
             ]
         ),
         html.Hr(),
@@ -48,6 +62,41 @@ application.layout = dbc.Container(
             [
                 dbc.Col(
                     [
+                        dbc.Card(
+                            [
+                                dbc.CardBody(
+                                    [
+                                        html.H4(
+                                            [
+                                                html.I(
+                                                    className="bi bi-bar-chart-line me-2"
+                                                ),
+                                                "Demand index",
+                                            ],
+                                        ),
+                                        dbc.RadioItems(
+                                            options=[
+                                                {
+                                                    "label": "Demand index",
+                                                    "value": "demand_index",
+                                                },
+                                                {
+                                                    "label": "Supply index",
+                                                    "value": "supply_index",
+                                                },
+                                                {
+                                                    "label": "Demand/Supply",
+                                                    "value": "demand_supply_index",
+                                                },
+                                            ],
+                                            value=None,
+                                            id="demand-index-column-selector",
+                                        ),
+                                    ]
+                                ),
+                            ],
+                        ),
+                        html.Br(),
                         dbc.Card(
                             [
                                 dbc.CardBody(
@@ -141,7 +190,10 @@ application.layout = dbc.Container(
         html.Hr(),
         dbc.Row(
             [
-                html.Div("Version: Alpha/Prototype", style={'color': 'grey','font-style': 'italic'}),
+                html.Div(
+                    "Version: Alpha/Prototype",
+                    style={"color": "grey", "font-style": "italic"},
+                ),
                 html.P(
                     [
                         "This project was developed by ",
@@ -167,22 +219,29 @@ application.layout = dbc.Container(
     Output(component_id="map", component_property="figure"),
     Input(component_id="demand-column-selector", component_property="value"),
     Input(component_id="supply-column-selector", component_property="value"),
+    Input(component_id="demand-index-column-selector", component_property="value"),
     Input(component_id="normalize-button", component_property="value"),
 )
-def update_map(demand_input_value, supply_input_value, normalize):
+def update_map(demand_input_value, supply_input_value, index_input_value, normalize):
     """Update the map according to the selected item on the RadioItems"""
     # Plot from supply RadioItems or demand RadioItems?
     if demand_input_value:
         col = demand_input_value
         colorscale = "OrRd"
-    else:
-        col = supply_input_value
-        colorscale = "Greens"
-
-    # Normalize or not?
-    if col != "nb_parking_spots":
+        # Normalize or not?
         if normalize:
             col += "_normalized"
+    elif supply_input_value:
+        col = supply_input_value
+        colorscale = "Greens"
+    elif index_input_value:
+        col = index_input_value
+        if col == "demand_index":
+            colorscale = "OrRd"
+        elif col == "supply_index":
+            colorscale = "Greens"
+        else:
+            colorscale = "Blues"
 
     fig = create_map(df, col, width=None, height=None, colorscale=colorscale)
     # Remove legend title
@@ -193,16 +252,22 @@ def update_map(demand_input_value, supply_input_value, normalize):
 @application.callback(
     Output(component_id="demand-column-selector", component_property="value"),
     Output(component_id="supply-column-selector", component_property="value"),
+    Output(component_id="demand-index-column-selector", component_property="value"),
     Input(component_id="demand-column-selector", component_property="value"),
     Input(component_id="supply-column-selector", component_property="value"),
+    Input(component_id="demand-index-column-selector", component_property="value"),
     prevent_initial_call=True,
 )
-def update_supply_demand_radioitems(demand_input_value, supply_input_value):
+def update_supply_demand_radioitems(
+    demand_input_value, supply_input_value, index_input_value
+):
     """Guarantee only one RadioItems has a value selected"""
     if callback_context.triggered_id == "demand-column-selector":
-        return demand_input_value, None
+        return demand_input_value, None, None
     elif callback_context.triggered_id == "supply-column-selector":
-        return None, supply_input_value
+        return None, supply_input_value, None
+    elif callback_context.triggered_id == "demand-index-column-selector":
+        return None, None, index_input_value
 
 
 if __name__ == "__main__":

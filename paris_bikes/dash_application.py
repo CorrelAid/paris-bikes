@@ -4,6 +4,7 @@ from dash import Dash, Input, Output, State, callback_context, dcc, html
 from dash.exceptions import PreventUpdate
 
 from paris_bikes.mapping import create_map
+from paris_bikes.pipelines import create_parking_index
 from paris_bikes.utils import get_data_root
 
 # Load data and metadata
@@ -25,6 +26,15 @@ df = df.assign(
         (col + "_normalized"): (df.loc[:, col] / (df["nb_parking_spots"] + 1))
         for col in df.columns.drop(["geometry", "iris"])
     }
+)
+# Create scaled columns
+df = df.join(
+    create_parking_index(df)
+    .loc[:, ["parking_index", "parking_normalized"]]
+    .rename(
+        columns={"parking_index": "demand_index", "parking_normalized": "supply_index"}
+    )
+    .assign(demand_supply_index=lambda x: x["demand_index"] / x["supply_index"])
 )
 
 # Initialize the dash app
@@ -60,8 +70,64 @@ application.layout = dbc.Container(
                                     [
                                         html.H4(
                                             [
+                                                html.I(
+                                                    className="bi bi-bar-chart-line me-2"
+                                                ),
+                                                "Indices ",
+                                                html.I(
+                                                    className="bi bi-info",
+                                                    id="indices-tooltip",
+                                                ),
+                                                dbc.Tooltip(
+                                                    "Indices used to estimate supply and demand for bike parking. "
+                                                    "These built by scaling the supply and demand metrics between 0 and 1, "
+                                                    "where 0 is the minimum metric value, and 1 the maximum. "
+                                                    "The scaled metrics are then summed at IRIS level.",
+                                                    target="indices-tooltip",
+                                                ),
+                                            ],
+                                        ),
+                                        dbc.RadioItems(
+                                            options=[
+                                                {
+                                                    "label": "Demand index",
+                                                    "value": "demand_index",
+                                                },
+                                                {
+                                                    "label": "Supply index",
+                                                    "value": "supply_index",
+                                                },
+                                                {
+                                                    "label": "Demand/Supply Index",
+                                                    "value": "demand_supply_index",
+                                                },
+                                            ],
+                                            value=None,
+                                            id="demand-index-column-selector",
+                                        ),
+                                    ]
+                                ),
+                            ],
+                        ),
+                        html.Br(),
+                        dbc.Card(
+                            [
+                                dbc.CardBody(
+                                    [
+                                        html.H4(
+                                            [
                                                 html.I(className="bi bi-cart3 me-2"),
-                                                "Demand metrics",
+                                                "Demand metrics ",
+                                                html.I(
+                                                    className="bi bi-info",
+                                                    id="demand-tooltip",
+                                                ),
+                                                dbc.Tooltip(
+                                                    "Metrics used to estimate demand for bike parking. "
+                                                    "These are based on open data sources listed at the "
+                                                    "bottom of the webpage.",
+                                                    target="demand-tooltip",
+                                                ),
                                             ],
                                         ),
                                         dbc.RadioItems(
@@ -119,7 +185,17 @@ application.layout = dbc.Container(
                                         html.H4(
                                             [
                                                 html.I(className="bi bi-box-seam me-2"),
-                                                "Supply metrics",
+                                                "Supply metrics ",
+                                                html.I(
+                                                    className="bi bi-info",
+                                                    id="supply-tooltip",
+                                                ),
+                                                dbc.Tooltip(
+                                                    "Metrics used to estimate supply for bike parking. "
+                                                    "These are based on open data sources listed at the "
+                                                    "bottom of the webpage.",
+                                                    target="supply-tooltip",
+                                                ),
                                             ],
                                         ),
                                         dbc.RadioItems(
@@ -189,22 +265,29 @@ application.layout = dbc.Container(
     Output(component_id="map", component_property="figure"),
     Input(component_id="demand-column-selector", component_property="value"),
     Input(component_id="supply-column-selector", component_property="value"),
+    Input(component_id="demand-index-column-selector", component_property="value"),
     Input(component_id="normalize-button", component_property="value"),
 )
-def update_map(demand_input_value, supply_input_value, normalize):
+def update_map(demand_input_value, supply_input_value, index_input_value, normalize):
     """Update the map according to the selected item on the RadioItems"""
     # Plot from supply RadioItems or demand RadioItems?
     if demand_input_value:
         col = demand_input_value
         colorscale = "OrRd"
-    else:
-        col = supply_input_value
-        colorscale = "Greens"
-
-    # Normalize or not?
-    if col != "nb_parking_spots":
+        # Normalize or not?
         if normalize:
             col += "_normalized"
+    elif supply_input_value:
+        col = supply_input_value
+        colorscale = "Greens"
+    elif index_input_value:
+        col = index_input_value
+        if col == "demand_index":
+            colorscale = "OrRd"
+        elif col == "supply_index":
+            colorscale = "Greens"
+        else:
+            colorscale = "Blues"
 
     fig = create_map(df, col, width=None, height=None, colorscale=colorscale)
     # Remove legend title
@@ -215,16 +298,22 @@ def update_map(demand_input_value, supply_input_value, normalize):
 @application.callback(
     Output(component_id="demand-column-selector", component_property="value"),
     Output(component_id="supply-column-selector", component_property="value"),
+    Output(component_id="demand-index-column-selector", component_property="value"),
     Input(component_id="demand-column-selector", component_property="value"),
     Input(component_id="supply-column-selector", component_property="value"),
+    Input(component_id="demand-index-column-selector", component_property="value"),
     prevent_initial_call=True,
 )
-def update_supply_demand_radioitems(demand_input_value, supply_input_value):
+def update_supply_demand_radioitems(
+    demand_input_value, supply_input_value, index_input_value
+):
     """Guarantee only one RadioItems has a value selected"""
     if callback_context.triggered_id == "demand-column-selector":
-        return demand_input_value, None
+        return demand_input_value, None, None
     elif callback_context.triggered_id == "supply-column-selector":
-        return None, supply_input_value
+        return None, supply_input_value, None
+    elif callback_context.triggered_id == "demand-index-column-selector":
+        return None, None, index_input_value
 
 
 @application.callback(

@@ -131,9 +131,18 @@ def feature_pipeline(
 
     return df_feature
 
-def create_parking_index(feature_dataset = '',
-                         index_vars = ['nb_pop', 'visitors', 'nb_metro_rer_passengers', 'nb_train_passengers', 'shops_weighted', 'school_capacity']
-                        ) -> gpd.GeoDataFrame:
+
+def create_parking_index(
+    feature_dataset="",
+    index_vars=[
+        "nb_pop",
+        "visitors",
+        "nb_metro_rer_passengers",
+        "nb_train_passengers",
+        "shops_weighted",
+        "school_capacity",
+    ],
+) -> gpd.GeoDataFrame:
 
     """Create parking index and save the dataset incl. the index
 
@@ -147,27 +156,35 @@ def create_parking_index(feature_dataset = '',
         gpd.GeoDataFrame: Feature table incl. index.
 
     """
-   #  Load feature dataset if not passed as argument
+    #  Load feature dataset if not passed as argument
     if isinstance(feature_dataset, gpd.GeoDataFrame):
         pass
     else:
         feature_dataset_filepath = get_data_root() / "feature/feature.geojson"
         feature_dataset = gpd.read_file(feature_dataset_filepath)
 
-    feature_dataset = feature_dataset.set_index('iris')
+    feature_dataset = feature_dataset.set_index("iris")
     df_aggr = feature_dataset[index_vars].copy()
 
     # normalize each variable
     for var in df_aggr.columns:
-        df_aggr[var] = (df_aggr[var] - df_aggr[var].min()) / (df_aggr[var].max() - df_aggr[var].min())
+        df_aggr[var] = (df_aggr[var] - df_aggr[var].min()) / (
+            df_aggr[var].max() - df_aggr[var].min()
+        )
 
     # aggregate normalized variables to parking index
-    df_aggr['parking_index'] = df_aggr.sum(axis = 1)
+    df_aggr["parking_index"] = df_aggr.sum(axis=1)
 
     # add parking index to original geodataframe
-    df_parking_index = feature_dataset.join(df_aggr[['parking_index']])
+    df_parking_index = feature_dataset.join(df_aggr[["parking_index"]])
 
     # normalize parking supply
-    df_parking_index['parking_normalized'] = (df_parking_index['nb_parking_spots'] - df_parking_index['nb_parking_spots'].min()) / (df_parking_index['nb_parking_spots'].max() - df_parking_index['nb_parking_spots'].min())
+    df_parking_index["parking_normalized"] = (
+        df_parking_index["nb_parking_spots"]
+        - df_parking_index["nb_parking_spots"].min()
+    ) / (
+        df_parking_index["nb_parking_spots"].max()
+        - df_parking_index["nb_parking_spots"].min()
+    )
 
     return df_parking_index

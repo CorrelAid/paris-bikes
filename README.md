@@ -31,7 +31,7 @@ Have a look here TODO ADD LINK at a hosted version of the Parking Demand Index.
 
 You can also clone the repository and work with the code yourself. See section [Project setup](#project-setup).
 
-TODO ADD SCREENSHOT
+<img src="img/PPDI_App_Screenshot.png">
 
 ## Blog article
 

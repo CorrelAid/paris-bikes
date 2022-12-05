@@ -1,6 +1,16 @@
 # "Where to build new bicycle parking spots in Paris? Supporting data-driven decision-making with open data"
 
-TL;DR This is the repository of the CorreAid project `paris-bikes` in collaboration with the City of Paris.
+This is the repository of the CorreAid project `paris-bikes` in collaboration with the City of Paris.
+
+#### Table of Contents
+- [Context](#context)
+- [Paris Parking Demand Index](#paris-parking-demand-index)
+- [Blog article](#blog-article)
+- [Contributors and supporters](#contributors-and-supporters)
+- [Project setup](#project-setup)
+- [Project management](#project-management)
+
+## Context
 
 Metropolitan areas like the city of Paris are facing important **challenges transitioning to green mobility**. Space to build new infrastructures for alternative transport, like bicycle lanes or parking spots, is limited. Often, existing infrastructure has to be repurposed, and there are lots of local restrictions. In the last years, the City of Paris has implemented [ambitious goals in terms of mobility transition](https://www.paris.fr/pages/paris-a-velo-225), which will [continue in the years to come](https://www.paris.fr/pages/un-nouveau-plan-velo-pour-une-ville-100-cyclable-19554).
 
@@ -14,30 +24,26 @@ After a first contact for [Open Data Day 2022](https://github.com/CorrelAid/open
 
 From July to December 2022, the team explored open data repositories, researched approaches of other cities, brainstormed, discussed, designed, and coded. The results can be found in this repository :)  
 
-#### Table of Contents  
-- [Paris Parking Demand Index](#paris-parking-demand-index)
-- [Blog article](#blog-article)
-- [Contributors and supporters](#contributors-and-supporters)
-- [Project setup](#project-setup)
-- [Project management](#project-management)
-
 ## Paris Parking Demand Index
 
 The Paris Parking Demand Index is a web app that visualizes the number of existing bicycle parking spaces in the City of Paris in relation to metrics that might indicate demand for bicycle parking, such as the number of stores or people entering the metro.
 Aggregated at the IRIS level, the smallest unit of municipal infrastructure in France, this index helps determine how adequately areas are served in terms of parking facilities, while leaving flexibility as to which exact location they should be built.
-All data used in this project is open data from municipal and regional open data portals.
+All data used in this project is from French open data portals.
 
-Have a look here TODO ADD LINK at a hosted version of the Parking Demand Index.
+Have a look here at a hosted version of the Parking Demand Index *[Link will follow soon]*
 
 You can also clone the repository and work with the code yourself. See section [Project setup](#project-setup).
 
-TODO ADD SCREENSHOT
+### Screenshot
+<table><tr><td>
+   <img src="img/PPDI_App_Screenshot.png" />
+</td></tr></table>
 
 ## Blog article
 
 Would you like to learn more about the project, and how we worked together as a group of volunteers to address the challenge of supporting decision-making in the City of Paris with open data? 
 
-Check out the blog article about this project TODO ADD LINK!
+Check out the blog article about this project! *[Link will follow soon]*
 
 ## Contributors and supporters
 

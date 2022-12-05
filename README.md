@@ -27,7 +27,7 @@ From July to December 2022, the team explored open data repositories, researched
 
 The Paris Parking Demand Index is a web app that visualizes the number of existing bicycle parking spaces in the City of Paris in relation to metrics that might indicate demand for bicycle parking, such as the number of stores or people entering the metro.
 Aggregated at the IRIS level, the smallest unit of municipal infrastructure in France, this index helps determine how adequately areas are served in terms of parking facilities, while leaving flexibility as to which exact location they should be built.
-All data used in this project is open data from French open data portals.
+All data used in this project is from French open data portals.
 
 Have a look here TODO ADD LINK at a hosted version of the Parking Demand Index.
 

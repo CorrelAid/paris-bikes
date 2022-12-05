@@ -55,7 +55,7 @@ application.layout = dbc.Container(
                 ),
                 html.Br(),
                 html.Div(
-                    "Aggregated at the IRIS level, the smallest unit of municipal infrastructure in France, this index helps determine how adequately areas are served in terms of parking facilities, while leaving flexibility as to which exact location they should be built."
+                    "Aggregated at the IRIS level, the smallest unit of municipal infrastructure in France, this index helps determine how adequately areas are served in terms of parking facilities, while leaving flexibility as to which exact location they should be built. All data used in this project is from French open data portals."
                 ),
             ]
         ),

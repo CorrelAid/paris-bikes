@@ -3,12 +3,21 @@
 This is the repository of the CorreAid project `paris-bikes` in collaboration with the City of Paris.
 
 #### Table of Contents
-- [Context](#context)
-- [Paris Parking Demand Index](#paris-parking-demand-index)
-- [Blog article](#blog-article)
-- [Contributors and supporters](#contributors-and-supporters)
-- [Project setup](#project-setup)
-- [Project management](#project-management)
+- ["Where to build new bicycle parking spots in Paris? Supporting data-driven decision-making with open data"](#where-to-build-new-bicycle-parking-spots-in-paris-supporting-data-driven-decision-making-with-open-data)
+            - [Table of Contents](#table-of-contents)
+    - [Context](#context)
+    - [Paris Parking Demand Index](#paris-parking-demand-index)
+        - [Screenshot](#screenshot)
+    - [Blog article](#blog-article)
+    - [Contributors and supporters](#contributors-and-supporters)
+        - [We thank](#we-thank)
+    - [Project setup](#project-setup)
+        - [Dash application](#dash-application)
+        - [Development environment](#development-environment)
+        - [Data management](#data-management)
+    - [Project management](#project-management)
+        - [Useful links](#useful-links)
+        - [Definition of Done](#definition-of-done)
 
 ## Context
 
@@ -109,6 +118,8 @@ DVC is easy to use and follows a syntax similar to git.
 
 DVC is already installed if you followed the [Environment](#environment) setup.
 If necessary, check [here](https://dvc.org/doc/install) for other installation methods.
+
+> If you are a member of the project, copy the `config.local` file that can be found in the shared Google Drive folder into the `.dvc` folder.
 
 **To get DVC-managed files from the remote repository:**
 

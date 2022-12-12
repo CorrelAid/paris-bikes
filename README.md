@@ -3,19 +3,19 @@
 This is the repository of the CorreAid project `paris-bikes` in collaboration with the City of Paris.
 
 #### Table of Contents
-    - [Context](#context)
-    - [Paris Parking Demand Index](#paris-parking-demand-index)
-        - [Screenshot](#screenshot)
-    - [Blog article](#blog-article)
-    - [Contributors and supporters](#contributors-and-supporters)
-        - [We thank](#we-thank)
-    - [Project setup](#project-setup)
-        - [Dash application](#dash-application)
-        - [Development environment](#development-environment)
-        - [Data management](#data-management)
-    - [Project management](#project-management)
-        - [Useful links](#useful-links)
-        - [Definition of Done](#definition-of-done)
+- [Context](#context)
+- [Paris Parking Demand Index](#paris-parking-demand-index)
+    - [Screenshot](#screenshot)
+- [Blog article](#blog-article)
+- [Contributors and supporters](#contributors-and-supporters)
+    - [We thank](#we-thank)
+- [Project setup](#project-setup)
+    - [Dash application](#dash-application)
+    - [Development environment](#development-environment)
+    - [Data management](#data-management)
+- [Project management](#project-management)
+    - [Useful links](#useful-links)
+    - [Definition of Done](#definition-of-done)
 
 ## Context
 

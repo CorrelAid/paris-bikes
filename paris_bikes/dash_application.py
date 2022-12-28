@@ -1,3 +1,5 @@
+import os
+
 import dash_bootstrap_components as dbc
 import geopandas as gpd
 from dash import Dash, Input, Output, State, callback_context, dcc, html
@@ -328,4 +330,6 @@ def toggle_collapse(n, is_open):
 
 
 if __name__ == "__main__":
-    application.run_server(debug=True, port=5001)
+    application.run_server(
+        debug=False, host="0.0.0.0", port=int(os.environ.get("PORT", 5000))
+    )

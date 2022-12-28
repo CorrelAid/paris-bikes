@@ -1,9 +1,9 @@
 import os
 
+os.environ["USE_PYGEOS"] = "0"
 import dash_bootstrap_components as dbc
 import geopandas as gpd
 from dash import Dash, Input, Output, State, callback_context, dcc, html
-from dash.exceptions import PreventUpdate
 
 from paris_bikes.mapping import create_map
 from paris_bikes.pipelines import create_parking_index

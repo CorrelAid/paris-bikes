@@ -1,6 +1,6 @@
 # "Where to build new bicycle parking spots in Paris? Supporting data-driven decision-making with open data"
 
-This is the repository of the CorreAid project `paris-bikes` in collaboration with the City of Paris.
+**TL;DR** This is the repository of the CorreAid project `paris-bikes` in collaboration with the City of Paris. The main tangible output is a prototype of the *Paris Parking Demand Index* (click here to [run the prototype](https://paris-bikes-wfiz3bgwsa-ew.a.run.app/), it might take a minute to load). It is a map that shows bike parking supply and indicators for parking demand (using open data) at the scale of IRIS (the smallest statistical spatial units used in France).
 
 #### Table of Contents
 - [Context](#context)
@@ -13,6 +13,7 @@ This is the repository of the CorreAid project `paris-bikes` in collaboration wi
     - [Dash application](#dash-application)
     - [Development environment](#development-environment)
     - [Data management](#data-management)
+    - [Deploying the application to Google Cloud Run](#deploying-the-application-to-google-cloud-run)
 - [Project management](#project-management)
     - [Useful links](#useful-links)
     - [Definition of Done](#definition-of-done)
@@ -29,7 +30,7 @@ And this is where CorrelAid comes in! *(You don't know CorrelAid? Have a [look h
 
 After a first contact for [Open Data Day 2022](https://github.com/CorrelAid/open_data_22_paris) the mobility agency "Mission Vélo" (Mission Bike) and the innovation office of the City of Paris teamed up with an international group of CorrelAid volunteers to work on this question.
 
-From July to December 2022, the team explored open data repositories, researched approaches of other cities, brainstormed, discussed, designed, and coded. The results can be found in this repository :)  
+From July to December 2022, the team explored open data repositories, researched approaches of other cities, brainstormed, discussed, designed, and coded. The results can be found in this repository :)
 
 ## Paris Parking Demand Index
 
@@ -37,7 +38,7 @@ The Paris Parking Demand Index is a web app that visualizes the number of existi
 Aggregated at the IRIS level, the smallest unit of municipal infrastructure in France, this index helps determine how adequately areas are served in terms of parking facilities, while leaving flexibility as to which exact location they should be built.
 All data used in this project is from French open data portals.
 
-Have a look here at a hosted version of the Parking Demand Index *[Link will follow soon]*
+**Click [here](https://paris-bikes-wfiz3bgwsa-ew.a.run.app/) to access a hosted version of the Parking Demand Index** (it might take up to a minute to load).
 
 You can also clone the repository and work with the code yourself. See section [Project setup](#project-setup).
 
@@ -145,6 +146,17 @@ dvc checkout
 ```
 
 A quick starting guide can be found [here](https://dvc.org/doc/start/data-management).
+
+### Deploying the application to Google Cloud Run
+
+The application has been deployed on Google Cloud Run and can be found [here](https://paris-bikes-wfiz3bgwsa-ew.a.run.app/).
+
+To deploy a new version:
+
+1. Make sure you have access to the project (contact @operte)
+2. Make sure you are familiar with the [Cloud Run Python guide](https://cloud.google.com/run/docs/quickstarts/build-and-deploy/deploy-python-service?hl=en), that you have the Google Cloud CLI installed and initialized
+3. Make sure that `.dockerignore` and `Dockerfile` are up-to-date (and ideally try them out locally using e.g. Docker)
+4. Deploy using `gcloud run deploy`
 
 ## Project management
 

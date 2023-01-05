@@ -1,0 +1,16 @@
+Dockerfile
+*.pyc
+*.pyo
+*.pyd
+__pycache__
+.pytest_cache
+
+.dvc/
+.venv/
+data/primary/
+data/raw/
+notebooks/
+img/
+README.md
+.dvcignore
+LICENSE.md

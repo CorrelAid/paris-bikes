@@ -1,6 +1,6 @@
 # "Where to build new bicycle parking spots in Paris? Supporting data-driven decision-making with open data"
 
-**TL;DR** This is the repository of the CorreAid project `paris-bikes` in collaboration with the City of Paris. The main tangible output is a prototype of the *Paris Parking Demand Index* (click here to [run the prototype](https://paris-bikes-wfiz3bgwsa-ew.a.run.app/), it might take a minute to load). It is a map that shows bike parking supply and indicators for parking demand (using open data) at the scale of IRIS (the smallest statistical spatial units used in France).
+**TL;DR** This is the repository of the CorreAid project `paris-bikes` in collaboration with the City of Paris. The main tangible output is a prototype of the *Paris Parking Demand Index*. It is a map that shows bike parking supply and indicators for parking demand (using open data) at the scale of IRIS (the smallest statistical spatial units used in France). Click here to [run the prototype](https://paris-bikes-wfiz3bgwsa-ew.a.run.app/) (it might take up to a minute to load).
 
 #### Table of Contents
 - [Context](#context)

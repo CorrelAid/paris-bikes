@@ -3,22 +3,20 @@
 This is the repository of the CorreAid project `paris-bikes` in collaboration with the City of Paris.
 
 #### Table of Contents
-- ["Where to build new bicycle parking spots in Paris? Supporting data-driven decision-making with open data"](#where-to-build-new-bicycle-parking-spots-in-paris-supporting-data-driven-decision-making-with-open-data)
-            - [Table of Contents](#table-of-contents)
-    - [Context](#context)
-    - [Paris Parking Demand Index](#paris-parking-demand-index)
-        - [Screenshot](#screenshot)
-    - [Blog article](#blog-article)
-    - [Contributors and supporters](#contributors-and-supporters)
-        - [We thank](#we-thank)
-    - [Project setup](#project-setup)
-        - [Dash application](#dash-application)
-        - [Development environment](#development-environment)
-        - [Data management](#data-management)
-        - [Deploying the application to Google Cloud Run](#deploying-the-application-to-google-cloud-run)
-    - [Project management](#project-management)
-        - [Useful links](#useful-links)
-        - [Definition of Done](#definition-of-done)
+- [Context](#context)
+- [Paris Parking Demand Index](#paris-parking-demand-index)
+    - [Screenshot](#screenshot)
+- [Blog article](#blog-article)
+- [Contributors and supporters](#contributors-and-supporters)
+    - [We thank](#we-thank)
+- [Project setup](#project-setup)
+    - [Dash application](#dash-application)
+    - [Development environment](#development-environment)
+    - [Data management](#data-management)
+    - [Deploying the application to Google Cloud Run](#deploying-the-application-to-google-cloud-run)
+- [Project management](#project-management)
+    - [Useful links](#useful-links)
+    - [Definition of Done](#definition-of-done)
 
 ## Context
 
